@@ -1,9 +1,11 @@
 package me.jingyu.springbootdeveloper.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jingyu.springbootdeveloper.domain.Article;
 import me.jingyu.springbootdeveloper.dto.AddArticleRequest;
 import me.jingyu.springbootdeveloper.dto.ArticleResponse;
+import me.jingyu.springbootdeveloper.dto.UpdateArticleRequest;
 import me.jingyu.springbootdeveloper.service.BlogService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 public class BlogApiController {
     private final BlogService blogService;
 
@@ -51,5 +54,16 @@ public class BlogApiController {
 
         return ResponseEntity.ok()
                 .build();
+    }
+
+    // 글 수정
+    @PutMapping("/api/articles/{id}")
+    public ResponseEntity<Article> updateArticle(@PathVariable Long id, @RequestBody UpdateArticleRequest request) {
+        Article updatedArticle = blogService.update(id, request);
+
+        log.info("글 수정 완료");
+
+        return ResponseEntity.ok()
+                .body(updatedArticle);
     }
 }
