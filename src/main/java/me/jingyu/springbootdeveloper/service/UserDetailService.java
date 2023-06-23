@@ -1,13 +1,17 @@
 package me.jingyu.springbootdeveloper.service;
 
+import lombok.RequiredArgsConstructor;
 import me.jingyu.springbootdeveloper.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
 // 스프링 시큐리티에서 사용자의 정보를 가져오는 클래스
+@RequiredArgsConstructor
+@Service
 public class UserDetailService implements UserDetailsService {
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     // 사용자 email로 사용자 정보를 가져오는 클래스
     @Override
