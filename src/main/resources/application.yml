@@ -12,3 +12,7 @@ spring:
       hibernate:
         format_sql: true
     defer-datasource-initialization: true
+
+jwt:
+  issuer: test@email.com
+  secret_key: study-springboot
