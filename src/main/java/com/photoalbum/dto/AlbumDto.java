@@ -6,7 +6,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Getter @Setter
-public class AlbumResponseDto {
+public class AlbumDto {
     private Long albumId;
     private String albumName;
     private LocalDateTime createdAt;
