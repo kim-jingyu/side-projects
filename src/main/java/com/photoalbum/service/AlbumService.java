@@ -5,13 +5,15 @@ import com.photoalbum.dto.AlbumResponseDto;
 import com.photoalbum.mapper.AlbumMapper;
 import com.photoalbum.repository.AlbumRepository;
 import com.photoalbum.repository.PhotoRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AlbumService {
     private final AlbumRepository albumRepository;
@@ -30,7 +32,7 @@ public class AlbumService {
     }
 
     public AlbumResponseDto getAlbumByName(String albumName) {
-        Optional<Album> album = albumRepository.findByName(albumName);
+        Optional<Album> album = albumRepository.findByAlbumName(albumName);
 
         if (album.isPresent()) {
             AlbumResponseDto dto = AlbumMapper.convertToDto(album.get());
