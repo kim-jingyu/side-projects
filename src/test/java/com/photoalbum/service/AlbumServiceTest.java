@@ -76,4 +76,19 @@ class AlbumServiceTest {
         Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + savedAlbumDto.getAlbumId()));
         Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + savedAlbumDto.getAlbumId()));
     }
+
+    @Test
+    void testUpdateAlbumName() throws IOException {
+        AlbumDto beforeDto = new AlbumDto();
+        beforeDto.setAlbumName("변경전");
+        AlbumDto beforeAlbum = albumService.createAlbum(beforeDto);
+
+        AlbumDto afterDto = new AlbumDto();
+        afterDto.setAlbumName("변경후");
+        albumService.updateAlbum(beforeAlbum.getAlbumId(), afterDto);
+
+        AlbumDto updatedDto = albumService.getAlbum(beforeAlbum.getAlbumId());
+
+        assertThat(updatedDto.getAlbumName()).isEqualTo("변경후");
+    }
 }
