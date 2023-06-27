@@ -91,4 +91,14 @@ class AlbumServiceTest {
 
         assertThat(updatedDto.getAlbumName()).isEqualTo("변경후");
     }
+
+    @Test
+    void testDeleteAlbum() throws IOException {
+        AlbumDto dto = new AlbumDto();
+        dto.setAlbumName("새로운 앨범");
+
+        AlbumDto createdAlbum = albumService.createAlbum(dto);
+
+        albumService.deleteAlbum(createdAlbum.getAlbumId());
+    }
 }
