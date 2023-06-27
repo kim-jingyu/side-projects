@@ -113,4 +113,11 @@ public class AlbumService {
 
         return AlbumMapper.convertToDto(findAlbum);
     }
+
+    @Transactional
+    public void deleteAlbum(Long albumId) throws IOException {
+        albumRepository.deleteById(albumId);
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + albumId));
+        Files.deleteIfExists(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + albumId));
+    }
 }
