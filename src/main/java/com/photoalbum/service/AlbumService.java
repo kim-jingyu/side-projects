@@ -2,6 +2,7 @@ package com.photoalbum.service;
 
 import com.photoalbum.Constants;
 import com.photoalbum.domain.Album;
+import com.photoalbum.domain.Photo;
 import com.photoalbum.dto.AlbumDto;
 import com.photoalbum.mapper.AlbumMapper;
 import com.photoalbum.repository.AlbumRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -64,5 +66,40 @@ public class AlbumService {
     private void createAlbumDirectories(Album album) throws IOException {
         Files.createDirectories(Paths.get(Constants.PATH_PREFIX + "/photos/original/" + album.getAlbumId()));
         Files.createDirectories(Paths.get(Constants.PATH_PREFIX + "/photos/thumb/" + album.getAlbumId()));
+    }
+
+    public List<AlbumDto> getAlbumList(String keyword, String sort, String orderBy) {
+        List<AlbumDto> albumDtos = getAlbumDtos(keyword, sort, orderBy);
+
+        for (AlbumDto albumDto : albumDtos) {
+            List<Photo> top4Photos = photoRepository.findTop4ByAlbum_AlbumIdOrderByUploadedAtDesc(albumDto.getAlbumId());
+            albumDto.setThumbUrls(top4Photos.stream().map(Photo::getThumbUrl).map(thumbUrl -> Constants.PATH_PREFIX + thumbUrl).toList());
+        }
+
+        return albumDtos;
+    }
+
+    private List<AlbumDto> getAlbumDtos(String keyword, String sort, String orderBy) {
+        List<AlbumDto> albumDtos;
+        if (sort.equals("byName")) {
+            if (orderBy.equals("desc")) {
+                albumDtos = AlbumMapper.convertToDtoList(albumRepository.findByAlbumNameContainingOrderByAlbumNameDesc(keyword));
+            } else if (orderBy.equals("asc")) {
+                albumDtos = AlbumMapper.convertToDtoList(albumRepository.findByAlbumNameContainingOrderByAlbumNameAsc(keyword));
+            } else {
+                albumDtos = AlbumMapper.convertToDtoList(albumRepository.findByAlbumNameContainingOrderByAlbumNameAsc(keyword));
+            }
+        } else if (sort.equals("byDate")) {
+            if (orderBy.equals("desc")) {
+                albumDtos = AlbumMapper.convertToDtoList(albumRepository.findByAlbumNameContainingOrderByCreatedAtDesc(keyword));
+            } else if (orderBy.equals("asc")) {
+                albumDtos = AlbumMapper.convertToDtoList(albumRepository.findByAlbumNameContainingOrderByCreatedAtAsc(keyword));
+            } else {
+                albumDtos = AlbumMapper.convertToDtoList(albumRepository.findByAlbumNameContainingOrderByCreatedAtDesc(keyword));
+            }
+        } else {
+            throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
+        }
+        return albumDtos;
     }
 }

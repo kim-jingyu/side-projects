@@ -10,6 +10,8 @@ public interface AlbumRepository extends JpaRepository<Album, Long> {
     Optional<Album> findByAlbumName(String albumName);
 
     List<Album> findByAlbumNameContainingOrderByAlbumNameAsc(String keyword);
+    List<Album> findByAlbumNameContainingOrderByAlbumNameDesc(String keyword);
 
     List<Album> findByAlbumNameContainingOrderByCreatedAtDesc(String keyword);
+    List<Album> findByAlbumNameContainingOrderByCreatedAtAsc(String keyword);
 }
