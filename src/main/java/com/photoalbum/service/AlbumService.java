@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -101,5 +102,15 @@ public class AlbumService {
             throw new IllegalArgumentException("알 수 없는 정렬 기준입니다.");
         }
         return albumDtos;
+    }
+
+    @Transactional
+    public AlbumDto updateAlbum(Long albumId, AlbumDto albumDto) {
+        Album findAlbum = albumRepository.findById(albumId)
+                .orElseThrow(() -> new NoSuchElementException(String.format("앨범명 %d로 조회되는 값이 없습니다.", albumId)));
+
+        findAlbum.setAlbumName(albumDto.getAlbumName());
+
+        return AlbumMapper.convertToDto(findAlbum);
     }
 }

@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 
 @RestController
@@ -37,5 +36,11 @@ public class AlbumController {
                                                        @RequestParam(value = "orderBy", required = false, defaultValue = "") final String orderBy) {
         List<AlbumDto> albumList = albumService.getAlbumList(keyword, sort, orderBy);
         return new ResponseEntity<>(albumList, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{albumId}")
+    public ResponseEntity<AlbumDto> updateAlbum(@PathVariable Long albumId, @RequestBody AlbumDto albumDto) {
+        AlbumDto updatedAlbum = albumService.updateAlbum(albumId, albumDto);
+        return new ResponseEntity<>(updatedAlbum, HttpStatus.OK);
     }
 }
