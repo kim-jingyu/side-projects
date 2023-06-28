@@ -12,7 +12,8 @@ public interface PhotoRepository extends JpaRepository<Photo,Long> {
     int countByAlbum_AlbumId(Long albumId);
 
     // 앨범 아이디별로 최신 4장의 이미지를 가져오는 메서드
-    List<Photo> findTop4ByAlbum_AlbumIdOrderByUploadedAtDesc(Long albumId);
+    @Query("select p from Photo p join p.album a where a.albumId = :albumId order by p.uploadedAt desc limit 4")
+    List<Photo> findLatest4ImagesOfAlbum(Long albumId);
 
     @Query("select p from Photo p join p.album a where a.albumId = :albumId and p.photoId = :photoId")
     Optional<Photo> findPhoto(@Param("albumId") Long albumId, @Param("photoId") Long photoId);

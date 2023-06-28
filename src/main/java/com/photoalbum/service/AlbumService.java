@@ -73,7 +73,7 @@ public class AlbumService {
         List<AlbumDto> albumDtos = getAlbumDtos(keyword, sort, orderBy);
 
         for (AlbumDto albumDto : albumDtos) {
-            List<Photo> top4Photos = photoRepository.findTop4ByAlbum_AlbumIdOrderByUploadedAtDesc(albumDto.getAlbumId());
+            List<Photo> top4Photos = photoRepository.findLatest4ImagesOfAlbum(albumDto.getAlbumId());
             albumDto.setThumbUrls(top4Photos.stream().map(Photo::getThumbUrl).map(thumbUrl -> Constants.PATH_PREFIX + thumbUrl).toList());
         }
 
