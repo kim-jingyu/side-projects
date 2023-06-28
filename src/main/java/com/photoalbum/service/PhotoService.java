@@ -89,4 +89,11 @@ public class PhotoService {
             throw new RuntimeException("에러! 파일을 저장할 수 없습니다." + e.getMessage());
         }
     }
+
+    public File getImageFile(Long photoId) {
+        Photo photo = photoRepository.findById(photoId)
+                .orElseThrow(() -> new EntityNotFoundException(String.format("에러! ID가 %d인 사진을 찾을 수 없습니다.", photoId)));
+
+        return new File(Constants.PATH_PREFIX + photo.getOriginalUrl());
+    }
 }
