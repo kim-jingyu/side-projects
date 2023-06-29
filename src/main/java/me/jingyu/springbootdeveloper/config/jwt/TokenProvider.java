@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Header;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import me.jingyu.springbootdeveloper.domain.User;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Date;
@@ -29,6 +32,7 @@ public class TokenProvider {    // 토큰을 생성, 올바른 토큰인지 유�
     // JWT 토큰 생성 메서드
     private String makeToken(Date expire, User user) {
         Date now = new Date();
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
 
         return Jwts.builder()
                 .setHeaderParam(Header.TYPE, Header.JWT_TYPE)
@@ -37,15 +41,16 @@ public class TokenProvider {    // 토큰을 생성, 올바른 토큰인지 유�
                 .setExpiration(expire)
                 .setSubject(user.getEmail())
                 .claim("id", user.getId())
-                .signWith(SignatureAlgorithm.HS256, jwtProperties.getSecretKey())
+                .signWith(secretKey, SignatureAlgorithm.HS256)
                 .compact();
     }
 
     // JWT 토큰 유효성 검증 메서드
     public boolean validToken(String token) {
         try {
+            SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
             Jwts.parserBuilder()
-                    .setSigningKey(jwtProperties.getSecretKey())    // 비밀값으로 복호화
+                    .setSigningKey(secretKey)    // 비밀값으로 복호화
                     .build()
                     .parseClaimsJws(token);
             return true;
@@ -69,8 +74,10 @@ public class TokenProvider {    // 토큰을 생성, 올바른 토큰인지 유�
     }
 
     private Claims getClaims(String token) {
+        SecretKey secretKey = Keys.hmacShaKeyFor(jwtProperties.getSecretKey().getBytes(StandardCharsets.UTF_8));
+
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(jwtProperties.getSecretKey())
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
