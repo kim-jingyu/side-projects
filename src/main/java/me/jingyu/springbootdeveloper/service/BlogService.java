@@ -12,6 +12,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional(readOnly = true)
 public class BlogService {
     private final BlogRepository blogRepository;
 
