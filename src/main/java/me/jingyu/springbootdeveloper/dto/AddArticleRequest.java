@@ -13,10 +13,11 @@ public class AddArticleRequest {
     private String content;
 
     // 블로그 글을 추가할 때, 저장할 엔티티로 변환하는 용도
-    public Article toEntity() {
+    public Article toEntity(String author) {
         return Article.builder()
                 .title(title)
                 .content(content)
+                .author(author)
                 .build();
     }
 }
