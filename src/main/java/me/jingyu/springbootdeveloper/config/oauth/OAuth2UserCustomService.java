@@ -8,6 +8,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Map;
 
@@ -17,6 +18,7 @@ import java.util.Map;
  * 없다면 saveOrUpdate() 메서드를 사용해서 users 테이블에 유저 데이터를 추가
  */
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
     private final UserRepository userRepository;

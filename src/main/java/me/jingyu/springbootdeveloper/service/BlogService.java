@@ -1,6 +1,7 @@
 package me.jingyu.springbootdeveloper.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.jingyu.springbootdeveloper.domain.Article;
 import me.jingyu.springbootdeveloper.dto.AddArticleRequest;
 import me.jingyu.springbootdeveloper.dto.UpdateArticleRequest;
@@ -14,11 +15,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Service
 @Transactional(readOnly = true)
+@Slf4j
 public class BlogService {
     private final BlogRepository blogRepository;
 
     @Transactional
     public Article save(AddArticleRequest request, String username) {
+        log.info("블로그 글 저장");
         return blogRepository.save(request.toEntity(username));
     }
 
@@ -33,6 +36,7 @@ public class BlogService {
 
     @Transactional
     public void delete(Long id) {
+        log.info("블로그 글 삭제");
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found" + id));
 
@@ -42,6 +46,7 @@ public class BlogService {
 
     @Transactional
     public Article update(Long id, UpdateArticleRequest request) {
+        log.info("블로그 글 수정");
         Article article = blogRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("not found: " + id));
 

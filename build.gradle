@@ -31,6 +31,8 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0' // XML 문서와 Java 객체 간 매핑을 자동화
 
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
+
     // OAuth2를 사용하기 위한 스타터 추가
     implementation 'org.springframework.security:spring-security-oauth2-client'
 }

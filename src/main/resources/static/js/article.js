@@ -2,7 +2,7 @@
 const deleteButton = document.getElementById('delete-btn')
 
 if (deleteButton) {
-    deleteButton.addEventListener('click', event => {
+    deleteButton.addEventListener('click', (event) => {
         let id = document.getElementById('article-id').value
         /*fetch(`/api/articles/${id}`, {
             method: 'DELETE'
@@ -11,6 +11,7 @@ if (deleteButton) {
             alert('삭제가 완료되었습니다.')
             location.replace('/articles')
         })*/
+        alert('삭제 버튼 클릭!')
         function success() {
             alert("삭제가 완료되었습니다.")
             location.replace('/articles')
@@ -28,7 +29,7 @@ if (deleteButton) {
 const modifyButton = document.getElementById('modify-btn')
 
 if (modifyButton) {
-    modifyButton.addEventListener('click', event => {
+    modifyButton.addEventListener('click', (event) => {
         let params = new URLSearchParams(location.search)
         let id = params.get('id')
 
@@ -46,7 +47,7 @@ if (modifyButton) {
             alert('수정이 완료되었습니다.')
             location.replace(`/articles/${id}`)
         })*/
-
+        alert('수정 버튼 클릭!')
         body = JSON.stringify({
             title: document.getElementById('title').value,
             content: document.getElementById('content').value
@@ -65,10 +66,11 @@ if (modifyButton) {
 }
 
 const createButton = document.getElementById('create-btn')
+console.log(createButton)
 
 if (createButton) {
-    createButton.addEventListener('click', event => {
-        /*fetch('/api/articles',{
+    createButton.addEventListener('click', (event) => {
+        fetch('/api/articles',{
             method: 'POST',
             headers: {
                 "Content-Type": "application/json"
@@ -81,8 +83,9 @@ if (createButton) {
         .then(() => {
             alert('등록 완료되었습니다.')
             location.replace('/articles')
-        })*/
-        body = JSON.stringify({
+        })
+        alert('등록 버튼 클릭!')
+       /* body = JSON.stringify({
             title: document.getElementById('title').value,
             content: document.getElementById('content').value
         });
@@ -95,7 +98,7 @@ if (createButton) {
             location.replace("/articles")
         }
 
-        httpRequest("POST", "/api/articles", body, success, fail)
+        httpRequest("POST", "/api/articles", body, success, fail)*/
     })
 }
 
@@ -142,7 +145,7 @@ function httpRequest(method, url, body, success, fail){
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    refresh_token: getCookie("refresh_token")
+                    refreshToken: getCookie("refresh_token")
                 })
             }).then((res) => {
                 if (res.ok){
@@ -154,6 +157,7 @@ function httpRequest(method, url, body, success, fail){
                 // 새로운 access token 으로 http 요청을 보낸다.
                 httpRequest(method, url, body, success, fail)
             })
+            .catch((error) => fail())
         }
         else {
             return fail()
