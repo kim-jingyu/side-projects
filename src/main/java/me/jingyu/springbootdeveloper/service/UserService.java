@@ -13,10 +13,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Transactional
     public Long save(AddUserRequest dto) {
+        BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();  // 패스워드 암호화
+
         return userRepository.save(User.builder()
                 .email(dto.getEmail())
                 .password(bCryptPasswordEncoder.encode(dto.getPassword()))
@@ -27,5 +29,10 @@ public class UserService {
     public User findById(Long userId) {
         return userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 유저 아이디로 검색되는 유저가 없습니다."));
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("해당 유저 이메일로 검색되는 유저가 없습니다."));
     }
 }
