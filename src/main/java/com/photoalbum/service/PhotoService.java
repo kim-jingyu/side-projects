@@ -21,6 +21,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -36,6 +38,15 @@ public class PhotoService {
                 .orElseThrow(() -> new NoSuchElementException(String.format("에러! %d번째 사진이 없습니다.", photoId)));
 
         return PhotoMapper.convertToDto(findPhoto);
+    }
+
+    public List<PhotoDto> getPhotoList(Long albumId) {
+        List<PhotoDto> photoDtos = new ArrayList<>();
+        for (Photo photo : photoRepository.findPhotoList(albumId)) {
+            photoDtos.add(PhotoMapper.convertToDto(photo));
+        }
+
+        return photoDtos;
     }
     @Transactional
     public PhotoDto savePhoto(MultipartFile file, Long albumId) throws IOException {

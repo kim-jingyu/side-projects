@@ -20,4 +20,7 @@ public interface PhotoRepository extends JpaRepository<Photo,Long> {
 
     @Query("select p from Photo p join p.album a where a.albumId = :albumId and p.fileName = :photoName")
     Optional<Photo> findIsSamePhotoInAlbum(String photoName, Long albumId);
+
+    @Query("select p from Photo p join p.album a where a.albumId = :albumId")
+    List<Photo> findPhotoList(Long albumId);
 }

@@ -18,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -108,5 +107,13 @@ public class PhotoController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    // 사진 목록 불러오기
+    @GetMapping
+    public ResponseEntity<List<PhotoDto>> getPhotoList(@PathVariable("albumId") Long albumId) {
+        return ResponseEntity
+                .ok()
+                .body(photoService.getPhotoList(albumId));
     }
 }
