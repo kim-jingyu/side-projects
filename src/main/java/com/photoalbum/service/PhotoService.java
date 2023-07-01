@@ -37,7 +37,6 @@ public class PhotoService {
 
         return PhotoMapper.convertToDto(findPhoto);
     }
-
     @Transactional
     public PhotoDto savePhoto(MultipartFile file, Long albumId) throws IOException {
         Album album = albumRepository.findById(albumId)
