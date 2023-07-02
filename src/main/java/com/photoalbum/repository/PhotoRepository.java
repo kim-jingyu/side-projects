@@ -2,6 +2,7 @@ package com.photoalbum.repository;
 
 import com.photoalbum.domain.Photo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -23,4 +24,8 @@ public interface PhotoRepository extends JpaRepository<Photo,Long> {
 
     @Query("select p from Photo p join p.album a where a.albumId = :albumId")
     List<Photo> findPhotoList(Long albumId);
+
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update Photo p set p.album_id = :toAlbumId where p.photo_id = :photoId and p.album_id = :fromAlbumId", nativeQuery = true)
+    void updatePhotoByAlbumId(Long fromAlbumId, Long toAlbumId, Long photoId);
 }

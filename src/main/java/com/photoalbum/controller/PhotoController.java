@@ -1,5 +1,6 @@
 package com.photoalbum.controller;
 
+import com.photoalbum.dto.MovePhotoDto;
 import com.photoalbum.dto.PhotoDto;
 import com.photoalbum.service.PhotoService;
 import jakarta.servlet.ServletOutputStream;
@@ -115,5 +116,20 @@ public class PhotoController {
         return ResponseEntity
                 .ok()
                 .body(photoService.getPhotoList(albumId));
+    }
+
+    // 사진 앨범 옮기기
+    @PutMapping("/move")
+    public ResponseEntity<List<PhotoDto>> movePhotos(@PathVariable("albumId") Long fromAlbumId, @RequestBody MovePhotoDto movePhotoDto) {
+        try {
+            photoService.movePhoto(fromAlbumId, movePhotoDto.getToAlbumId(), movePhotoDto.getPhotoIds());
+            return ResponseEntity
+                    .ok()
+                    .body(photoService.getPhotoList(fromAlbumId));
+        } catch (IOException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
+        }
     }
 }

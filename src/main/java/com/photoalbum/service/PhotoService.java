@@ -18,8 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -105,5 +108,25 @@ public class PhotoService {
                 .orElseThrow(() -> new EntityNotFoundException(String.format("에러! ID가 %d인 사진을 찾을 수 없습니다.", photoId)));
 
         return new File(Constants.PATH_PREFIX + photo.getOriginalUrl());
+    }
+
+    @Transactional
+    public void movePhoto(Long fromAlbumId, Long toAlbumId, List<Long> photoIds) throws IOException {
+        for (Long photoId : photoIds) {
+            Photo photo = photoRepository.findById(photoId)
+                    .orElseThrow(() -> new NoSuchElementException(String.format("에러! %d번째 사진이 없습니다.", photoId)));
+
+            InputStream oriInputStream = new FileInputStream(Constants.PATH_PREFIX + photo.getOriginalUrl());
+            Files.copy(oriInputStream, Paths.get(Constants.ORIGINAL_PATH + "/" + toAlbumId + "/" + photo.getFileName()));
+            Files.delete(Path.of(Constants.PATH_PREFIX + photo.getOriginalUrl()));
+            photo.setOriginalUrl("/photos/original/" + toAlbumId + "/" + photo.getFileName());
+
+            FileInputStream thumbInputStream = new FileInputStream(Constants.PATH_PREFIX + photo.getThumbUrl());
+            Files.copy(thumbInputStream, Paths.get(Constants.THUMB_PATH + "/" + toAlbumId + "/" + photo.getFileName()));
+            Files.delete(Path.of(Constants.PATH_PREFIX + photo.getThumbUrl()));
+            photo.setThumbUrl("/photos/thumb/" + toAlbumId + "/" + photo.getFileName());
+
+            photoRepository.updatePhotoByAlbumId(fromAlbumId, toAlbumId, photo.getPhotoId());
+        }
     }
 }
