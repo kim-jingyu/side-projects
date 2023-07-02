@@ -129,4 +129,17 @@ public class PhotoService {
             photoRepository.updatePhotoByAlbumId(fromAlbumId, toAlbumId, photo.getPhotoId());
         }
     }
+
+    @Transactional
+    public void deletePhotos(Long albumId, List<Long> photoIds) throws IOException {
+        for (Long photoId : photoIds) {
+            Photo photo = photoRepository.findPhoto(albumId, photoId)
+                    .orElseThrow(() -> new NoSuchElementException(String.format("에러! %d번째 사진이 없습니다.", photoId)));
+
+            Files.delete(Path.of(Constants.PATH_PREFIX + photo.getOriginalUrl()));
+            Files.delete(Path.of(Constants.PATH_PREFIX + photo.getThumbUrl()));
+
+            photoRepository.deleteById(photoId);
+        }
+    }
 }

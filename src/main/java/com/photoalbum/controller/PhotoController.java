@@ -132,4 +132,19 @@ public class PhotoController {
                     .build();
         }
     }
+
+    // 사진 삭제하기
+    @DeleteMapping
+    public ResponseEntity<List<PhotoDto>> deletePhotos(@PathVariable("albumId") Long albumId, @RequestBody MovePhotoDto movePhotoDto) {
+        try {
+            photoService.deletePhotos(albumId, movePhotoDto.getPhotoIds());
+            return ResponseEntity
+                    .ok()
+                    .body(photoService.getPhotoList(albumId));
+        } catch (IOException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
+        }
+    }
 }
