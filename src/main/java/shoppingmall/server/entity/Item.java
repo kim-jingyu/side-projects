@@ -5,12 +5,13 @@ import lombok.Getter;
 import lombok.ToString;
 import shoppingmall.server.constant.ItemSellStatus;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
 @ToString
-public class Item {
+public class Item extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
@@ -31,6 +32,6 @@ public class Item {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
+    @OneToMany(mappedBy = "item")
+    private List<ItemImg> itemImgList = new ArrayList<>();
 }

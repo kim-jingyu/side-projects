@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class OrderItem {
+public class OrderItem extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long orderItemId;

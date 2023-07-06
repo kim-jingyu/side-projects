@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Entity
 @Getter
-public class CartItem {
+public class CartItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long cartItemId;
