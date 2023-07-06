@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "order")
 @Getter
 public class Orders extends BaseEntity{
     @Id
@@ -27,7 +26,4 @@ public class Orders extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
-
-    private LocalDateTime createdTime;
-    private LocalDateTime updatedTime;
 }

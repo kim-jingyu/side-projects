@@ -15,10 +15,10 @@ public class ItemResponseDto {
 
     @Builder
     public ItemResponseDto(Item item) {
-        this.itemName = itemName;
-        this.price = price;
-        this.stockQuantity = stockQuantity;
-        this.itemDetail = itemDetail;
-        this.itemSellStatus = itemSellStatus;
+        this.itemName = item.getItemName();
+        this.price = item.getPrice();
+        this.stockQuantity = item.getStockQuantity();
+        this.itemDetail = item.getItemDetail();
+        this.itemSellStatus = item.getItemSellStatus();
     }
 }

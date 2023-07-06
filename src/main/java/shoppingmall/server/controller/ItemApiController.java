@@ -1,6 +1,7 @@
 package shoppingmall.server.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -17,17 +18,20 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class ItemApiController {
     private final ItemService itemService;
 
     // 상품 등록
     @PostMapping(value = "/admin/item")
-    public ResponseEntity<List<ItemResponseDto>> addItem(@RequestBody @Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
+    public ResponseEntity<List<ItemResponseDto>> addItem(@Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
                     .build();
         }
+
+        log.info("{}", itemRequestDto);
 
         List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
 

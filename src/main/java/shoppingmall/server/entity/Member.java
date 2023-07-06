@@ -5,7 +5,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import shoppingmall.server.constant.Role;
 import shoppingmall.server.dto.SignUpRequest;
 
@@ -37,7 +36,7 @@ public class Member extends BaseEntity{
         this.role = role;
     }
 
-    public static Member createMember(SignUpRequest requestDto, PasswordEncoder passwordEncoder) {
-        return new Member(requestDto.getMemberName(), requestDto.getEmail(), passwordEncoder.encode(requestDto.getPassword()), requestDto.getAddress(), Role.USER);
+    public static Member createMember(SignUpRequest requestDto) {
+        return new Member(requestDto.getMemberName(), requestDto.getEmail(), requestDto.getPassword(), requestDto.getAddress(), Role.USER);
     }
 }

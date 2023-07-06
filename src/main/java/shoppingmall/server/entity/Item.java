@@ -1,15 +1,16 @@
 package shoppingmall.server.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import shoppingmall.server.constant.ItemSellStatus;
+import shoppingmall.server.dto.ItemRequestDto;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 public class Item extends BaseEntity {
     @Id
@@ -34,4 +35,13 @@ public class Item extends BaseEntity {
 
     @OneToMany(mappedBy = "item")
     private List<ItemImg> itemImgList = new ArrayList<>();
+
+    @Builder
+    public Item(ItemRequestDto requestDto) {
+        this.itemName = requestDto.getItemName();
+        this.price = requestDto.getPrice();
+        this.stockQuantity = requestDto.getStockQuantity();
+        this.itemDetail = requestDto.getItemDetail();
+        this.itemSellStatus = requestDto.getItemSellStatus();
+    }
 }

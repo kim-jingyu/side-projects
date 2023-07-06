@@ -1,7 +1,6 @@
 package shoppingmall.server.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.server.dto.MemberResponseDto;
@@ -18,8 +17,8 @@ public class MemberService {
 
 
     @Transactional
-    public MemberResponseDto saveMember(SignUpRequest requestDto, PasswordEncoder passwordEncoder) {
-        Member member = Member.createMember(requestDto, passwordEncoder);
+    public MemberResponseDto saveMember(SignUpRequest requestDto) {
+        Member member = Member.createMember(requestDto);
         validateDuplicateMember(member);
 
         Member savedMember = memberRepository.save(member);
