@@ -25,18 +25,27 @@ public class ItemImg extends BaseEntity{
 
     private String representYn;
 
-    private ItemImg(Item item, String representYn) {
+    private ItemImg(Item item, String uploadImageName, String storedImageName, String storedFileUrl, String representYn) {
         this.item = item;
+        this.uploadImageName = uploadImageName;
+        this.storedImageName = storedImageName;
+        this.storedFileUrl = storedFileUrl;
         this.representYn = representYn;
     }
 
-    public static ItemImg createItemImg(Item item, String representYn) {
-        return new ItemImg(item, representYn);
+    public static ItemImg createItemImg(Item item, String uploadImageName, String storedImageName, String storedFileUrl, String representYn) {
+        return new ItemImg(item, uploadImageName, storedImageName, storedFileUrl, representYn);
     }
 
     public void updateItemImg(ItemImgDto itemImgDto) {
         this.uploadImageName = itemImgDto.getUploadImageName();
         this.storedImageName = itemImgDto.getStoredImageName();
         this.storedFileUrl = itemImgDto.getStoredFileUrl();
+    }
+
+    // 연관관계 편의 메서드
+    public void setItem(Item item) {
+        this.item = item;
+        item.getItemImgList().add(this);
     }
 }

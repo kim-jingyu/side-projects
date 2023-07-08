@@ -5,6 +5,8 @@ import lombok.Data;
 import shoppingmall.server.constant.ItemSellStatus;
 import shoppingmall.server.entity.Item;
 
+import java.util.List;
+
 @Data
 public class ItemResponseDto {
     private String itemName;
@@ -12,13 +14,15 @@ public class ItemResponseDto {
     private int stockQuantity;
     private String itemDetail;
     private ItemSellStatus itemSellStatus;
+    private List<ItemImgDto> itemImgDtoList;
 
     @Builder
-    public ItemResponseDto(Item item) {
+    public ItemResponseDto(Item item, List<ItemImgDto> itemImgDtoList) {
         this.itemName = item.getItemName();
         this.price = item.getPrice();
         this.stockQuantity = item.getStockQuantity();
         this.itemDetail = item.getItemDetail();
         this.itemSellStatus = item.getItemSellStatus();
+        this.itemImgDtoList = itemImgDtoList;
     }
 }
