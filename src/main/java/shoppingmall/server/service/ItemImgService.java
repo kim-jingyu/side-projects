@@ -19,13 +19,15 @@ public class ItemImgService {
     private final FileService fileService;
     private final ItemImgRepository itemImgRepository;
 
-    public void saveItemImg(ItemImg itemImg, MultipartFile itemImgFile) throws IOException {
+    public ItemImgDto saveItemImg(ItemImg itemImg, MultipartFile itemImgFile) throws IOException {
         if (itemImgFile.isEmpty()) {
-            return;
+            return null;
         }
         ItemImgDto itemImgDto = fileService.storeFile(itemImgFile);
 
         itemImg.updateItemImg(itemImgDto);
         itemImgRepository.save(itemImg);
+
+        return itemImgDto;
     }
 }
