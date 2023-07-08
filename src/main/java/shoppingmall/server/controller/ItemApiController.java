@@ -24,19 +24,16 @@ public class ItemApiController {
 
     // 상품 등록
     @PostMapping(value = "/admin/item")
-    public ResponseEntity<List<ItemResponseDto>> addItem(@Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
+    public ResponseEntity<ItemResponseDto> addItem(@Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
                     .build();
         }
 
-        log.info("{}", itemRequestDto);
-
-        List<ItemResponseDto> itemResponseDtoList = new ArrayList<>();
-
+        ItemResponseDto itemResponseDto;
         try {
-            itemResponseDtoList.add(itemService.saveItem(itemRequestDto, itemImgFileList));
+            itemResponseDto = itemService.saveItem(itemRequestDto, itemImgFileList);
         } catch (IOException e) {
             return ResponseEntity
                     .status(HttpStatus.NOT_FOUND)
@@ -45,6 +42,12 @@ public class ItemApiController {
 
         return ResponseEntity
                 .ok()
-                .body(itemResponseDtoList);
+                .body(itemResponseDto);
+    }
+
+    // 상품 상세페이지
+    @GetMapping(value = "/admin/item/{itemId}")
+    public ResponseEntity<ItemResponseDto> getItemDetail() {
+        return null;
     }
 }
