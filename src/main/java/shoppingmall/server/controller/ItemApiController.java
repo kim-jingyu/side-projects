@@ -1,5 +1,6 @@
 package shoppingmall.server.controller;
 
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -47,7 +48,33 @@ public class ItemApiController {
 
     // 상품 상세페이지
     @GetMapping(value = "/admin/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemDetail() {
-        return null;
+    public ResponseEntity<ItemResponseDto> getItemDetail(@PathVariable Long itemId) {
+        ItemResponseDto itemResponseDto;
+        try {
+            itemResponseDto = itemService.getItemDetail(itemId);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(itemResponseDto);
+    }
+
+    // 상품 수정
+    @PutMapping(value = "/admin/item/{itemId}")
+    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @Validated @ModelAttribute ItemRequestDto itemRequestDto, BindingResult bindingResult, List<MultipartFile> itemImgFileList) {
+        ItemResponseDto itemResponseDto;
+        try {
+            itemResponseDto = itemService.updateItem(itemId, itemRequestDto, itemImgFileList);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return ResponseEntity
+                .ok()
+                .body(itemResponseDto);
     }
 }
