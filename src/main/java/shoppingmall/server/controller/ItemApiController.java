@@ -31,7 +31,7 @@ public class ItemApiController {
 
     // 상품 등록
     @PostMapping(value = "/admin/item")
-    public ResponseEntity<ItemResponseDto> addItem(@Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
+    public @ResponseBody ResponseEntity addItem(@Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
@@ -54,7 +54,7 @@ public class ItemApiController {
 
     // 상품 상세페이지
     @GetMapping(value = "/admin/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> getItemDetail(@PathVariable Long itemId) {
+    public @ResponseBody ResponseEntity getItemDetail(@PathVariable Long itemId) {
         ItemResponseDto itemResponseDto;
         try {
             itemResponseDto = itemService.getItemDetail(itemId);
@@ -71,7 +71,7 @@ public class ItemApiController {
 
     // 상품 수정
     @PutMapping(value = "/admin/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @Validated @ModelAttribute ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
+    public @ResponseBody ResponseEntity updateItem(@PathVariable Long itemId, @Validated @ModelAttribute ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         ItemResponseDto itemResponseDto;
         try {
             itemResponseDto = itemService.updateItem(itemId, itemRequestDto, itemImgFileList);
@@ -86,7 +86,7 @@ public class ItemApiController {
 
     // 상품 리스트 조회
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
-    public ResponseEntity<Page<Item>> getItemList(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page) {
+    public @ResponseBody ResponseEntity getItemList(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
 
         Page<Item> adminItemPage;
@@ -95,7 +95,7 @@ public class ItemApiController {
         } catch (Exception e) {
             return ResponseEntity
                     .badRequest()
-                    .build();
+                    .body(e.getMessage());
         }
 
         return ResponseEntity
