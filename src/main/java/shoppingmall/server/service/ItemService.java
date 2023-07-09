@@ -64,4 +64,26 @@ public class ItemService {
                 .itemImgDtoList(itemImgDtoList)
                 .build();
     }
+
+    @Transactional
+    public ItemResponseDto updateItem(Long itemId, ItemRequestDto itemRequestDto, List<MultipartFile> itemImgFileList) throws IOException {
+        Item findItem = itemRepository.findById(itemId)
+                .orElseThrow(EntityNotFoundException::new);
+        findItem.updateItem(itemRequestDto);
+
+        List<ItemImgDto> itemImgDtoList = new ArrayList<>();
+        List<Long> itemImgIds = itemRequestDto.getItemImgIds();
+        for (int i = 0; i < itemImgIds.size(); i++) {
+            ItemImg itemImg = itemImgRepository.findByItem_ItemIdAndItemImgId(findItem.getItemId(), itemImgIds.get(i))
+                                    .orElseThrow(EntityNotFoundException::new);
+
+            itemImgDtoList.add(itemImgService.updateItemImg(itemImg, itemImgFileList.get(i)));
+        }
+
+        return ItemResponseDto
+                .builder()
+                .item(findItem)
+                .itemImgDtoList(itemImgDtoList)
+                .build();
+    }
 }

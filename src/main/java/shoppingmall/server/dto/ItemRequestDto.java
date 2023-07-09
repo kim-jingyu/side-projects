@@ -5,16 +5,16 @@ import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.modelmapper.ModelMapper;
-import org.springframework.web.multipart.MultipartFile;
 import shoppingmall.server.constant.ItemSellStatus;
-import shoppingmall.server.entity.Item;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter
 @ToString
 public class ItemRequestDto {
+    private Long itemId;
+
     @NotBlank(message = "상품명은 필수 입력 값입니다.")
     private String itemName;
 
@@ -29,6 +29,6 @@ public class ItemRequestDto {
 
     private ItemSellStatus itemSellStatus;
 
-    private List<MultipartFile> imageFiles;
-
+    private List<Long> itemImgIds = new ArrayList<>();
+    private List<ItemImgDto> itemImgDtos = new ArrayList<>();
 }

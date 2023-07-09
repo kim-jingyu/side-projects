@@ -65,7 +65,7 @@ public class ItemApiController {
 
     // 상품 수정
     @PutMapping(value = "/admin/item/{itemId}")
-    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @Validated @ModelAttribute ItemRequestDto itemRequestDto, BindingResult bindingResult, List<MultipartFile> itemImgFileList) {
+    public ResponseEntity<ItemResponseDto> updateItem(@PathVariable Long itemId, @Validated @ModelAttribute ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         ItemResponseDto itemResponseDto;
         try {
             itemResponseDto = itemService.updateItem(itemId, itemRequestDto, itemImgFileList);

@@ -28,7 +28,7 @@ public class FileService {
 
         multipartFile.transferTo(new File(storedPath));
 
-        return new ItemImgDto(uploadFileName, storeFileName, storedPath, null);
+        return new ItemImgDto(null, uploadFileName, storeFileName, storedPath, null);
     }
 
     public void deleteFile(String filePath) throws IOException {

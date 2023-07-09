@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class ItemResponseDto {
+    private Long itemId;
     private String itemName;
     private int price;
     private int stockQuantity;
@@ -18,6 +19,7 @@ public class ItemResponseDto {
 
     @Builder
     public ItemResponseDto(Item item, List<ItemImgDto> itemImgDtoList) {
+        this.itemId = item.getItemId();
         this.itemName = item.getItemName();
         this.price = item.getPrice();
         this.stockQuantity = item.getStockQuantity();

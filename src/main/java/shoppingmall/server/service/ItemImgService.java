@@ -30,4 +30,14 @@ public class ItemImgService {
 
         return itemImgDto;
     }
+
+    public ItemImgDto updateItemImg(ItemImg itemImg, MultipartFile itemImgFile) throws IOException {
+        fileService.deleteFile(itemImg.getStoredFileUrl());
+
+        ItemImgDto itemImgDto = fileService.storeFile(itemImgFile);
+
+        itemImg.updateItemImg(itemImgDto);
+
+        return itemImgDto;
+    }
 }
