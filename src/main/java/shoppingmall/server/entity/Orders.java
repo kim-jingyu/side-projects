@@ -26,4 +26,45 @@ public class Orders extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;
+
+    private Orders(Member member, LocalDateTime orderDate, OrderStatus orderStatus) {
+        this.member = member;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+    }
+
+    // 연관관계 편의 메서드
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    // 생성 메서드
+    public static Orders createOrder(Member member, OrderItem... orderItems) {
+        Orders order = new Orders(member, LocalDateTime.now(), OrderStatus.ORDER);
+        for (OrderItem orderItem : orderItems) {
+            order.addOrderItem(orderItem);
+        }
+        return order;
+    }
+
+    // 비즈니스 로직
+
+    // 주문시 사용한 전체 주문의 가격 조회. 역정규화
+    public int getTotalPrice() {
+        int totalPrice = 0;
+        for (OrderItem orderItem : orderItems) {
+            totalPrice += orderItem.getTotalPrice();
+        }
+
+        return totalPrice;
+    }
+
+    // 주문 취소
+    public void cancelOrder() {
+        this.orderStatus = OrderStatus.CANCEL;
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancelOrder();
+        }
+    }
 }
