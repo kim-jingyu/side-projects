@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import shoppingmall.server.constant.ItemSellStatus;
 import shoppingmall.server.dto.ItemSearchDto;
+import shoppingmall.server.dto.MainPageItemDto;
 import shoppingmall.server.entity.Item;
 import shoppingmall.server.entity.QItem;
 
@@ -37,6 +38,12 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
         return new PageImpl<>(content, pageable, content.size());
     }
 
+    @Override
+    public Page<MainPageItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+
+        return null;
+    }
+
     private BooleanExpression searchByDateAfter(String searchDateType) {
         if (!StringUtils.hasText(searchDateType)) return null;
 
@@ -60,7 +67,10 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
     }
 
     private BooleanExpression searchByLike(String searchBy, String searchQuery) {
-        if (!StringUtils.hasText(searchBy) || !StringUtils.hasText(searchBy)) return null;
+        if (!StringUtils.hasText(searchBy) && StringUtils.hasText(searchQuery)) {
+            throw new RuntimeException();
+        }
+        if (!StringUtils.hasText(searchBy) && !StringUtils.hasText(searchQuery)) return null;
 
         switch (searchBy) {
             case "itemName" -> {

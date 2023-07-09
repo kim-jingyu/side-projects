@@ -89,7 +89,14 @@ public class ItemApiController {
     public ResponseEntity<Page<Item>> getItemList(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);
 
-        Page<Item> adminItemPage = itemService.getAdminItemPage(itemSearchDto, pageable);
+        Page<Item> adminItemPage;
+        try {
+            adminItemPage = itemService.getAdminItemPage(itemSearchDto, pageable);
+        } catch (Exception e) {
+            return ResponseEntity
+                    .badRequest()
+                    .build();
+        }
 
         return ResponseEntity
                 .ok()
