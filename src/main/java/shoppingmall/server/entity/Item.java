@@ -33,9 +33,6 @@ public class Item extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    @OneToMany(mappedBy = "item")
-    private List<ItemImg> itemImgList = new ArrayList<>();
-
     @Builder
     public Item(ItemRequestDto requestDto) {
         this.itemName = requestDto.getItemName();

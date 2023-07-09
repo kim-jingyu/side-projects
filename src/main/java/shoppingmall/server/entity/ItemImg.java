@@ -44,8 +44,5 @@ public class ItemImg extends BaseEntity{
     }
 
     // 연관관계 편의 메서드
-    public void setItem(Item item) {
-        this.item = item;
-        item.getItemImgList().add(this);
-    }
+
 }
