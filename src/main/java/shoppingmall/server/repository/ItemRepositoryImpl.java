@@ -10,8 +10,10 @@ import org.springframework.util.StringUtils;
 import shoppingmall.server.constant.ItemSellStatus;
 import shoppingmall.server.dto.ItemSearchDto;
 import shoppingmall.server.dto.MainPageItemDto;
+import shoppingmall.server.dto.QMainPageItemDto;
 import shoppingmall.server.entity.Item;
 import shoppingmall.server.entity.QItem;
+import shoppingmall.server.entity.QItemImg;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -40,8 +42,34 @@ public class ItemRepositoryImpl implements ItemRepositoryCustom{
 
     @Override
     public Page<MainPageItemDto> getMainItemPage(ItemSearchDto itemSearchDto, Pageable pageable) {
+        QItem item = QItem.item;
+        QItemImg itemImg = QItemImg.itemImg;
 
-        return null;
+        List<MainPageItemDto> content = queryFactory
+                .select(
+                        new QMainPageItemDto(
+                                item.itemId,
+                                item.itemName,
+                                item.itemDetail,
+                                itemImg.storedFileUrl,
+                                item.price
+                        )
+                )
+                .from(itemImg)
+                .join(itemImg.item, item)
+                .where(itemImg.representYn.eq("Y"))
+                .where(searchByItemName(itemSearchDto.getSearchQuery()))
+                .orderBy(item.itemId.desc())
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+
+        return new PageImpl<>(content, pageable, content.size());
+    }
+
+    private BooleanExpression searchByItemName(String searchQuery) {
+        return searchQuery.isEmpty() ? null : QItem.item.itemName.like("%" + searchQuery + "%");
     }
 
     private BooleanExpression searchByDateAfter(String searchDateType) {
