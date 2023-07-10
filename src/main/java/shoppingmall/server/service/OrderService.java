@@ -68,4 +68,23 @@ public class OrderService {
 
         return new PageImpl<>(orderHistoryDtoList, pageable, totalCount);
     }
+
+    @Transactional
+    // 주문 취소
+    public void cancelOrder(Long orderId) {
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        order.cancelOrder();
+    }
+
+    public boolean validateOrder(Long orderId, String email) {
+        Member member = memberRepository.findByEmail(email);
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(EntityNotFoundException::new);
+        Member savedMember = order.getMember();
+
+        if (!member.getEmail().equals(savedMember.getEmail())) return false;
+
+        return true;
+    }
 }

@@ -63,4 +63,13 @@ public class OrderApiController {
                 .ok()
                 .body(orderHistoryDtoList);
     }
+
+    // 주문 취소
+    @DeleteMapping("/order/{orderId}")
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId) {
+        orderService.cancelOrder(orderId);
+        return ResponseEntity
+                .ok()
+                .body(orderId);
+    }
 }
