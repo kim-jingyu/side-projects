@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shoppingmall.server.dto.CartDetailDto;
 import shoppingmall.server.dto.CartItemDto;
 import shoppingmall.server.entity.Cart;
 import shoppingmall.server.entity.CartItem;
@@ -14,6 +15,9 @@ import shoppingmall.server.repository.CartRepository;
 import shoppingmall.server.repository.ItemRepository;
 import shoppingmall.server.repository.MemberRepository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -23,6 +27,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
 
+    @Transactional
     // 장바구니에 상품 담기
     public Long addCart(CartItemDto cartItemDto, String email) {
         Item item = itemRepository.findById(cartItemDto.getItemId())
@@ -48,5 +53,18 @@ public class CartService {
             cartItemRepository.save(cartItem);
             return cartItem.getCartItemId();
         }
+    }
+
+    // 장바구니에 들어있는 상품 조회
+    public List<CartDetailDto> getCartList(String email) {
+        Member member = memberRepository.findByEmail(email);
+        Cart cart = cartRepository.findByMemberId(member.getMemberId());
+        if (cart == null) {
+            return new ArrayList<>();
+        }
+
+        List<CartDetailDto> cartDetailDtoList = cartItemRepository.findCartDetailDtoList(cart.getCartId());
+
+        return cartDetailDtoList;
     }
 }

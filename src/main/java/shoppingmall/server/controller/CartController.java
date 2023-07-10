@@ -5,10 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import shoppingmall.server.dto.CartDetailDto;
 import shoppingmall.server.dto.CartItemDto;
 import shoppingmall.server.service.CartService;
 
@@ -47,5 +45,15 @@ public class CartController {
         return ResponseEntity
                 .ok()
                 .body(cartItemId);
+    }
+
+    // 장바구니 목록 조회
+    @GetMapping(value = "/cart")
+    public @ResponseBody ResponseEntity getCartDetail() {
+        List<CartDetailDto> cartDetailList = cartService.getCartList(null);
+
+        return ResponseEntity
+                .ok()
+                .body(cartDetailList);
     }
 }
