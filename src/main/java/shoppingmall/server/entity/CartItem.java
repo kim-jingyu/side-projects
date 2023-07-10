@@ -1,10 +1,13 @@
 package shoppingmall.server.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CartItem extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +22,18 @@ public class CartItem extends BaseEntity {
     private Item item;
 
     private int count;
+
+    private CartItem(Cart cart, Item item, int count) {
+        this.cart = cart;
+        this.item = item;
+        this.count = count;
+    }
+
+    public static CartItem createCartItem(Cart cart, Item item, int count) {
+        return new CartItem(cart, item, count);
+    }
+
+    public void addCount(int count){
+        this.count += count;
+    }
 }
