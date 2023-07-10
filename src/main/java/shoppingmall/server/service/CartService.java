@@ -34,14 +34,14 @@ public class CartService {
                 .orElseThrow(EntityNotFoundException::new);
         Member member = memberRepository.findByEmail(email);
 
-        Cart cart = cartRepository.findByMemberId(member.getMemberId());    // 현재 로그인한 회원의 장바구니
+        Cart cart = cartRepository.findByMember_MemberId(member.getMemberId());    // 현재 로그인한 회원의 장바구니
         if (cart == null) {
             cart = Cart.creatCart(member);
             cartRepository.save(cart);
         }
 
         // 현재 상품이 장바구니에 이미 들어가있는지 조회
-        CartItem savedCartItem = cartItemRepository.findByCartIdAndItemId(cart.getCartId(), item.getItemId());
+        CartItem savedCartItem = cartItemRepository.findByCart_CartIdAndItem_ItemId(cart.getCartId(), item.getItemId());
 
         if (savedCartItem != null) {
             // 장바구니에 이미 있던 상품일 경우
@@ -58,7 +58,7 @@ public class CartService {
     // 장바구니에 들어있는 상품 조회
     public List<CartDetailDto> getCartList(String email) {
         Member member = memberRepository.findByEmail(email);
-        Cart cart = cartRepository.findByMemberId(member.getMemberId());
+        Cart cart = cartRepository.findByMember_MemberId(member.getMemberId());
         if (cart == null) {
             return new ArrayList<>();
         }

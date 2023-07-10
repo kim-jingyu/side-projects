@@ -5,5 +5,5 @@ import shoppingmall.server.entity.CartItem;
 
 public interface CartItemRepository extends JpaRepository<CartItem, Long>, CartItemRepositoryCustom {
     // 장바구니에 들어갈 상품 조회
-    CartItem findByCartIdAndItemId(Long cartId, Long itemId);
+    CartItem findByCart_CartIdAndItem_ItemId(Long cartId, Long itemId);
 }
