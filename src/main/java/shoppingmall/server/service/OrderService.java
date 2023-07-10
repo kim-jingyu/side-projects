@@ -2,17 +2,23 @@ package shoppingmall.server.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import shoppingmall.server.dto.OrderHistoryDto;
+import shoppingmall.server.dto.OrderItemDto;
 import shoppingmall.server.dto.OrderRequestDto;
 import shoppingmall.server.dto.OrderResponseDto;
-import shoppingmall.server.entity.Item;
-import shoppingmall.server.entity.Member;
-import shoppingmall.server.entity.OrderItem;
-import shoppingmall.server.entity.Orders;
+import shoppingmall.server.entity.*;
+import shoppingmall.server.repository.ItemImgRepository;
 import shoppingmall.server.repository.ItemRepository;
 import shoppingmall.server.repository.MemberRepository;
 import shoppingmall.server.repository.OrderRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -21,6 +27,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ItemRepository itemRepository;
     private final MemberRepository memberRepository;
+    private final ItemImgRepository itemImgRepository;
 
     @Transactional
     public OrderResponseDto order(OrderRequestDto requestDto, String email) {
@@ -39,5 +46,26 @@ public class OrderService {
                 .orderId(order.getOrderId())
                 .totalPrice(order.getTotalPrice())
                 .build();
+    }
+
+    // 주문 목록 조회
+    public Page<OrderHistoryDto> getOrderList(String email, Pageable pageable) {
+        List<Orders> orderList = orderRepository.findByMember_EmailOrderByOrderDateDesc(email, pageable);
+        Long totalCount = orderRepository.countByMember_Email(email);
+
+        List<OrderHistoryDto> orderHistoryDtoList = new ArrayList<>();
+
+        for (Orders order : orderList) {
+            OrderHistoryDto orderHistoryDto = OrderHistoryDto.builder().order(order).build();
+            List<OrderItem> orderItems = order.getOrderItems();
+            for (OrderItem orderItem : orderItems) {
+                ItemImg itemImg = itemImgRepository.findByItem_ItemIdAndRepresentYn(orderItem.getItem().getItemId(), "Y");
+                OrderItemDto orderItemDto = new OrderItemDto(orderItem, itemImg.getStoredFileUrl());
+                orderHistoryDto.addOrderItemDto(orderItemDto);
+            }
+            orderHistoryDtoList.add(orderHistoryDto);
+        }
+
+        return new PageImpl<>(orderHistoryDtoList, pageable, totalCount);
     }
 }
