@@ -2,6 +2,7 @@ package shoppingmall.server.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.server.dto.CartDetailDto;
@@ -32,7 +33,8 @@ public class CartService {
     public Long addCart(CartItemDto cartItemDto, String email) {
         Item item = itemRepository.findById(cartItemDto.getItemId())
                 .orElseThrow(EntityNotFoundException::new);
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
 
         Cart cart = cartRepository.findByMember_MemberId(member.getMemberId());    // 현재 로그인한 회원의 장바구니
         if (cart == null) {
@@ -57,7 +59,8 @@ public class CartService {
 
     // 장바구니에 들어있는 상품 조회
     public List<CartDetailDto> getCartList(String email) {
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
         Cart cart = cartRepository.findByMember_MemberId(member.getMemberId());
         if (cart == null) {
             return new ArrayList<>();

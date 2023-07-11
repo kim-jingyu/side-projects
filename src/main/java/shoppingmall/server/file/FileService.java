@@ -2,6 +2,7 @@ package shoppingmall.server.file;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import shoppingmall.server.dto.ItemImgDto;
 
@@ -11,7 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.UUID;
 
-@Component
+@Service
 public class FileService {
     @Value("${itemImgLocation}")
     private String itemImgLocation;

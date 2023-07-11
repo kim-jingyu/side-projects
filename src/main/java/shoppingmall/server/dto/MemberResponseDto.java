@@ -8,4 +8,5 @@ import lombok.Setter;
 @Builder
 public class MemberResponseDto {
     private String memberName;
+    private String email;
 }

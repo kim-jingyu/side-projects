@@ -5,21 +5,28 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shoppingmall.server.constant.Role;
 import shoppingmall.server.dto.SignUpRequest;
+
+import java.util.Collection;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-public class Member extends BaseEntity{
+public class Member extends BaseEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
     private String memberName;
 
-    @Column(unique = true)
+    @Column(nullable = false, unique = true)
     private String email;
 
     private String password;
@@ -36,7 +43,52 @@ public class Member extends BaseEntity{
         this.role = role;
     }
 
-    public static Member createMember(SignUpRequest requestDto) {
-        return new Member(requestDto.getMemberName(), requestDto.getEmail(), requestDto.getPassword(), requestDto.getAddress(), Role.USER);
+    public static Member createUserMember(SignUpRequest requestDto, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        return new Member(requestDto.getMemberName(), requestDto.getEmail(), bCryptPasswordEncoder.encode(requestDto.getPassword()), requestDto.getAddress(), Role.USER);
+    }
+
+    public static Member createAdminMember(SignUpRequest requestDto, BCryptPasswordEncoder bCryptPasswordEncoder) {
+        return new Member(requestDto.getMemberName(), requestDto.getEmail(), bCryptPasswordEncoder.encode(requestDto.getPassword()), requestDto.getAddress(), Role.ADMIN);
+    }
+
+    // 권한 반환
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(Role.USER.toString()));
+    }
+
+    // 사용자의 id (고유값)
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    // 계정 만료 여부
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;    // 계정이 만료되었는지 확인 (만료X)
+    }
+
+    // 계정 잠금 여부
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;    // 계정이 잠금되었는지 확인 (만료X)
+    }
+
+    // 패스워드 만료 여부
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;        // 패스워드 만료 여부 확인 (만료X)
+    }
+
+    // 계정 사용 가능 여부 반환
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

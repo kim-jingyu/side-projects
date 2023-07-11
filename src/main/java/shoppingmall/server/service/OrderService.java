@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.server.dto.OrderHistoryDto;
@@ -31,7 +32,8 @@ public class OrderService {
 
     @Transactional
     public OrderResponseDto order(OrderRequestDto requestDto, String email) {
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
         Item item = itemRepository.findById(requestDto.getItemId())
                 .orElseThrow(EntityNotFoundException::new);
 
@@ -78,7 +80,8 @@ public class OrderService {
     }
 
     public boolean validateOrder(Long orderId, String email) {
-        Member member = memberRepository.findByEmail(email);
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
         Orders order = orderRepository.findById(orderId)
                 .orElseThrow(EntityNotFoundException::new);
         Member savedMember = order.getMember();
