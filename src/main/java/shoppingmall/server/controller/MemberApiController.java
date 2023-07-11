@@ -16,15 +16,15 @@ import shoppingmall.server.service.MemberService;
 public class MemberApiController {
     private final MemberService memberService;
 
-    @PostMapping(value = "/user/login")
-    public @ResponseBody ResponseEntity userLogin(@Validated LogInRequest logInRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest().body(bindingResult.getFieldErrors());
-        }
-
-        return ResponseEntity.ok().build();
-    }
+//    @GetMapping(value = "/user/login")
+//    public @ResponseBody ResponseEntity userLogin(@Validated LogInRequest logInRequest, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            return ResponseEntity
+//                    .badRequest().body(bindingResult.getFieldErrors());
+//        }
+//
+//        return ResponseEntity.ok().build();
+//    }
 
     @PostMapping(value = "/admin/login")
     public @ResponseBody ResponseEntity adminLogin(@Validated LogInRequest logInRequest, BindingResult bindingResult) {

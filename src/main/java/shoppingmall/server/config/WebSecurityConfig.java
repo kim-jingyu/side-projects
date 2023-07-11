@@ -37,25 +37,29 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
-                .authorizeHttpRequests((authz) -> authz
-                        .requestMatchers( "/user/signup", "/admin/signup", "/user/login", "/admin/login").permitAll()
-//                        .requestMatchers("/admin/**").hasRole(Role.ADMIN.toString())
-                        .anyRequest().authenticated()
-                )
-                .formLogin(httpSecurityFormLoginConfigurer -> httpSecurityFormLoginConfigurer
-                        .loginPage("/user/login")
-                        .loginPage("/admin/login")
-                        .defaultSuccessUrl("/"))
-                .logout(httpSecurityLogoutConfigurer -> httpSecurityLogoutConfigurer
-                        .logoutUrl("/user/login")
-                        .invalidateHttpSession(true))   // 로그아웃 후 세션 전체 삭제 여부
-                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests()
+                .requestMatchers("/user/signup", "/user/login").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .loginPage("/user/login")
+                .defaultSuccessUrl("/")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/login")
+                .invalidateHttpSession(true)
+                .and()
+                .csrf().disable()
                 .build();
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
-        return authenticationConfiguration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(HttpSecurity http, BCryptPasswordEncoder bCryptPasswordEncoder, UserDetailsService userDetailsService) throws Exception {
+        return http
+                .getSharedObject(AuthenticationManagerBuilder.class)
+                .userDetailsService(userService)
+                .passwordEncoder(bCryptPasswordEncoder)
+                .and().build();
     }
 
     @Bean

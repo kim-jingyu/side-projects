@@ -44,7 +44,8 @@ public class MemberService {
     }
 
     private void validateDuplicateMember(Member member) {
-        Member findMember = memberRepository.findByEmail(member.getEmail()).get();
+        Member findMember = memberRepository.findByEmail(member.getEmail())
+                .orElse(null);
         if (findMember != null) {
             throw new IllegalStateException("이미 가입된 회원입니다.");
         }
