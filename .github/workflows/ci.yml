@@ -26,3 +26,6 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+      
+    - name: Test with Gradle
+      run: SPRING_PROFILE_ACTIVE=[test] ./gradlew test
