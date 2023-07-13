@@ -10,7 +10,6 @@ import shoppingmall.server.repository.MemberRepository;
 
 // 스프링 시큐리티에서 사용자의 정보를 가져오는 클래스
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberDetailService implements UserDetailsService {
     private final MemberRepository memberRepository;
