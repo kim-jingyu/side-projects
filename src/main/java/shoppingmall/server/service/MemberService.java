@@ -43,6 +43,11 @@ public class MemberService {
                 .build();
     }
 
+    public Member findById(Long memberId) {
+        return memberRepository.findById(memberId)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다!"));
+    }
+
     private void validateDuplicateMember(Member member) {
         Member findMember = memberRepository.findByEmail(member.getEmail())
                 .orElse(null);
