@@ -24,7 +24,7 @@ public class OrderApiController {
     private final OrderService orderService;
 
     @PostMapping("/order")
-    public @ResponseBody ResponseEntity order(@RequestBody @Validated OrderRequestDto requestDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseEntity order(@RequestBody @Validated OrderRequestDto requestDto, BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
             List<FieldError> fieldErrors = bindingResult.getFieldErrors();
@@ -37,7 +37,7 @@ public class OrderApiController {
                     .body(sb.toString());
         }
 
-        String email = null;
+        String email = principal.getName();
         OrderResponseDto orderResponseDto;
         try {
             orderResponseDto = orderService.order(requestDto, email);
@@ -54,10 +54,11 @@ public class OrderApiController {
 
     // 주문 이력 조회
     @GetMapping(value = {"/orders", "/orders/{page}"})
-    public @ResponseBody ResponseEntity getOrderHistory(@PathVariable("page") Optional<Integer> page) {
+    public @ResponseBody ResponseEntity getOrderHistory(@PathVariable("page") Optional<Integer> page, Principal principal) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 4);
 
-        Page<OrderHistoryDto> orderHistoryDtoList = orderService.getOrderList(null, pageable);
+        String email = principal.getName();
+        Page<OrderHistoryDto> orderHistoryDtoList = orderService.getOrderList(email, pageable);
 
         return ResponseEntity
                 .ok()
@@ -66,8 +67,10 @@ public class OrderApiController {
 
     // 주문 취소
     @DeleteMapping("/order/{orderId}")
-    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId) {
-        orderService.cancelOrder(orderId);
+    public @ResponseBody ResponseEntity cancelOrder(@PathVariable("orderId") Long orderId, Principal principal) {
+        String email = principal.getName();
+
+        orderService.cancelOrder(orderId, email);
         return ResponseEntity
                 .ok()
                 .body(orderId);

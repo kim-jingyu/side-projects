@@ -47,6 +47,7 @@ public class OrderService {
                 .builder()
                 .orderId(order.getOrderId())
                 .totalPrice(order.getTotalPrice())
+                .memberName(order.getMember().getMemberName())
                 .build();
     }
 
@@ -71,10 +72,9 @@ public class OrderService {
         return new PageImpl<>(orderHistoryDtoList, pageable, totalCount);
     }
 
-    @Transactional
     // 주문 취소
-    public void cancelOrder(Long orderId) {
-        Orders order = orderRepository.findById(orderId)
+    public void cancelOrder(Long orderId, String email) {
+        Orders order = orderRepository.findByMember_EmailAndOrderId(email, orderId)
                 .orElseThrow(EntityNotFoundException::new);
         order.cancelOrder();
     }

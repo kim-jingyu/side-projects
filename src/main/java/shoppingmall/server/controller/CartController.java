@@ -10,6 +10,7 @@ import shoppingmall.server.dto.CartDetailDto;
 import shoppingmall.server.dto.CartItemDto;
 import shoppingmall.server.service.CartService;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -18,7 +19,7 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping(value = "/cart")
-    public @ResponseBody ResponseEntity addCart(@RequestBody @Validated CartItemDto cartItemDto, BindingResult bindingResult) {
+    public @ResponseBody ResponseEntity addCart(@RequestBody @Validated CartItemDto cartItemDto, BindingResult bindingResult, Principal principal) {
 
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
@@ -31,7 +32,7 @@ public class CartController {
                     .body(sb.toString());
         }
 
-        String email = null;
+        String email = principal.getName();
         Long cartItemId;
 
         try {
@@ -49,8 +50,10 @@ public class CartController {
 
     // 장바구니 목록 조회
     @GetMapping(value = "/cart")
-    public @ResponseBody ResponseEntity getCartDetail() {
-        List<CartDetailDto> cartDetailList = cartService.getCartList(null);
+    public @ResponseBody ResponseEntity getCartDetail(Principal principal) {
+        String email = principal.getName();
+
+        List<CartDetailDto> cartDetailList = cartService.getCartList(email);
 
         return ResponseEntity
                 .ok()
