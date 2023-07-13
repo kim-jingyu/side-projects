@@ -10,8 +10,8 @@ import shoppingmall.server.service.MemberService;
 public class MemberController {
     private final MemberService memberService;
 
-    @GetMapping(value = "/user/login")
-    public String userLogin() {
+    @GetMapping(value = "/login")
+    public String login() {
         return "login";
     }
 

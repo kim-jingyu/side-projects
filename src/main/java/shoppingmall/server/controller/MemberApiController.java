@@ -16,26 +16,6 @@ import shoppingmall.server.service.MemberService;
 public class MemberApiController {
     private final MemberService memberService;
 
-//    @GetMapping(value = "/user/login")
-//    public @ResponseBody ResponseEntity userLogin(@Validated LogInRequest logInRequest, BindingResult bindingResult) {
-//        if (bindingResult.hasErrors()) {
-//            return ResponseEntity
-//                    .badRequest().body(bindingResult.getFieldErrors());
-//        }
-//
-//        return ResponseEntity.ok().build();
-//    }
-
-    @PostMapping(value = "/admin/login")
-    public @ResponseBody ResponseEntity adminLogin(@Validated LogInRequest logInRequest, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return ResponseEntity
-                    .badRequest().body(bindingResult.getFieldErrors());
-        }
-
-        return ResponseEntity.ok().build();
-    }
-
     @PostMapping(value = "/user/signup")
     public @ResponseBody ResponseEntity userSignup(@Validated SignUpRequest signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {

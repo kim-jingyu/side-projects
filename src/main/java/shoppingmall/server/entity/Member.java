@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
-public class Member extends BaseEntity implements UserDetails {
+public class Member extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
@@ -49,46 +49,5 @@ public class Member extends BaseEntity implements UserDetails {
 
     public static Member createAdminMember(SignUpRequest requestDto, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new Member(requestDto.getMemberName(), requestDto.getEmail(), bCryptPasswordEncoder.encode(requestDto.getPassword()), requestDto.getAddress(), Role.ADMIN);
-    }
-
-    // 권한 반환
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(Role.USER.toString()));
-    }
-
-    // 사용자의 id (고유값)
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
-    }
-
-    // 계정 만료 여부
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;    // 계정이 만료되었는지 확인 (만료X)
-    }
-
-    // 계정 잠금 여부
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;    // 계정이 잠금되었는지 확인 (만료X)
-    }
-
-    // 패스워드 만료 여부
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;        // 패스워드 만료 여부 확인 (만료X)
-    }
-
-    // 계정 사용 가능 여부 반환
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }
