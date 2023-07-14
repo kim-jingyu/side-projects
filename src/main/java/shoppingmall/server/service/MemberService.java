@@ -48,6 +48,11 @@ public class MemberService {
                 .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다!"));
     }
 
+    public Member findByEmail(String email) {
+        return memberRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("회원 정보가 없습니다!"));
+    }
+
     private void validateDuplicateMember(Member member) {
         Member findMember = memberRepository.findByEmail(member.getEmail())
                 .orElse(null);

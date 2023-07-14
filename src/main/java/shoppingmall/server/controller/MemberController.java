@@ -19,6 +19,11 @@ public class MemberController {
         return "login";
     }
 
+    @GetMapping(value = "/oauth/login")
+    public String authLogin() {
+        return "auth/login";
+    }
+
 
     @GetMapping(value = "/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response) {

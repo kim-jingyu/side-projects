@@ -6,12 +6,14 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.server.entity.Member;
 import shoppingmall.server.repository.MemberRepository;
 
 import java.util.Map;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class OAuth2UserCustomService extends DefaultOAuth2UserService {
     private final MemberRepository memberRepository;
