@@ -64,7 +64,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     }
 
     private void saveRefreshToken(Member member, String refreshToken) {
-        RefreshToken madeRefreshToken = refreshTokenRepository.findByUserId(member.getMemberId())
+        RefreshToken madeRefreshToken = refreshTokenRepository.findByMemberId(member.getMemberId())
                 .map(entity -> entity.update(refreshToken))
                 .orElse(new RefreshToken(member.getMemberId(), refreshToken));
 
