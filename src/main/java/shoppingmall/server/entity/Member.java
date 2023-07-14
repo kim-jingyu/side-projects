@@ -1,19 +1,10 @@
 package shoppingmall.server.entity;
 
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import shoppingmall.server.constant.Role;
 import shoppingmall.server.dto.SignUpRequest;
-
-import java.util.Collection;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -35,6 +26,10 @@ public class Member extends BaseEntity{
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    // OAuth2 - 사용자 이름
+    @Column(unique = true)
+    private String nickName;
+
     private Member(String memberName, String email, String password, String address, Role role) {
         this.memberName = memberName;
         this.email = email;
@@ -43,11 +38,23 @@ public class Member extends BaseEntity{
         this.role = role;
     }
 
+    @Builder
+    private Member(String email, Role role, String nickName) {
+        this.email = email;
+        this.role = Role.USER;
+        this.nickName = nickName;
+    }
+
     public static Member createUserMember(SignUpRequest requestDto, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new Member(requestDto.getMemberName(), requestDto.getEmail(), bCryptPasswordEncoder.encode(requestDto.getPassword()), requestDto.getAddress(), Role.USER);
     }
 
     public static Member createAdminMember(SignUpRequest requestDto, BCryptPasswordEncoder bCryptPasswordEncoder) {
         return new Member(requestDto.getMemberName(), requestDto.getEmail(), bCryptPasswordEncoder.encode(requestDto.getPassword()), requestDto.getAddress(), Role.ADMIN);
+    }
+
+    public Member updateOAuthMember(String nickName) {
+        this.nickName = nickName;
+        return this;
     }
 }
