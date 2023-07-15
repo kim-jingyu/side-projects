@@ -37,4 +37,7 @@ public class UserRepository {
         return user;
     }
 
+    public void deleteById(Long id) {
+        users.removeIf(user -> user.getId().equals(id));
+    }
 }
