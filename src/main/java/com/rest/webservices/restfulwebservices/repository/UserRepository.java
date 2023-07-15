@@ -27,7 +27,8 @@ public class UserRepository {
     public User findOne(Long id) {
         return users.stream()
                 .filter(user -> user.getId().equals(id))
-                .findFirst().get();
+                .findFirst()
+                .orElse(null);
     }
 
     public User save(User user) {

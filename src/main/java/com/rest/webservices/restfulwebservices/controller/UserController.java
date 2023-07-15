@@ -1,6 +1,7 @@
 package com.rest.webservices.restfulwebservices.controller;
 
 import com.rest.webservices.restfulwebservices.entity.User;
+import com.rest.webservices.restfulwebservices.exception.UserNotFoundException;
 import com.rest.webservices.restfulwebservices.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,13 @@ public class UserController {
 
     @GetMapping(value = "/users/{id}")
     public User getUser(@PathVariable Long id) {
-        return userRepository.findOne(id);
+        User user = userRepository.findOne(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("id = " + id);
+        }
+
+        return user;
     }
 
     @PostMapping(value = "/users")
