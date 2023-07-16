@@ -1,5 +1,6 @@
 package com.rest.webservices.restfulwebservices.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -14,6 +15,8 @@ public class User {
 
     @Size(min = 2, message = "이름은 최소 2글자 이상이어야 합니다!")
     private String name;
+
     @Past(message = "생일은 미래일 수 없습니다!")
+    @JsonProperty("birth_date")
     private LocalDateTime birthDate;
 }
