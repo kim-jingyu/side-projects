@@ -2,7 +2,7 @@ package com.rest.webservices.restfulwebservices.controller;
 
 import com.rest.webservices.restfulwebservices.entity.User;
 import com.rest.webservices.restfulwebservices.exception.UserNotFoundException;
-import com.rest.webservices.restfulwebservices.repository.UserRepository;
+import com.rest.webservices.restfulwebservices.repository.UserDaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -19,18 +19,18 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserDaoService userDaoService;
 
     @GetMapping(value = "/users")
     public List<User> getUserList() {
-        return userRepository.findAll();
+        return userDaoService.findAll();
     }
 
     // EntityModel
     // WebMvcLinkBuilder
     @GetMapping(value = "/users/{id}")
     public EntityModel<User> getUser(@PathVariable Long id) {
-        User user = userRepository.findOne(id);
+        User user = userDaoService.findOne(id);
 
         if (user == null) {
             throw new UserNotFoundException("id = " + id);
@@ -46,7 +46,7 @@ public class UserController {
 
     @PostMapping(value = "/users")
     public ResponseEntity<Object> saveUser(@Validated @RequestBody User user) {
-        User savedUser = userRepository.save(user);
+        User savedUser = userDaoService.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedUser.getId())
@@ -58,6 +58,6 @@ public class UserController {
 
     @DeleteMapping(value = "/users/{id}")
     public void deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
+        userDaoService.deleteById(id);
     }
 }

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class UserRepository {
+public class UserDaoService {
 
     private static List<User> users = new ArrayList<>();
 
