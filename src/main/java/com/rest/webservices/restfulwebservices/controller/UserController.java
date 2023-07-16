@@ -4,6 +4,8 @@ import com.rest.webservices.restfulwebservices.entity.User;
 import com.rest.webservices.restfulwebservices.exception.UserNotFoundException;
 import com.rest.webservices.restfulwebservices.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,15 +26,22 @@ public class UserController {
         return userRepository.findAll();
     }
 
+    // EntityModel
+    // WebMvcLinkBuilder
     @GetMapping(value = "/users/{id}")
-    public User getUser(@PathVariable Long id) {
+    public EntityModel<User> getUser(@PathVariable Long id) {
         User user = userRepository.findOne(id);
 
         if (user == null) {
             throw new UserNotFoundException("id = " + id);
         }
 
-        return user;
+        EntityModel<User> entityModel = EntityModel.of(user);
+
+        WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).getUserList());
+        entityModel.add(link.withRel("all-users"));
+
+        return entityModel;
     }
 
     @PostMapping(value = "/users")
