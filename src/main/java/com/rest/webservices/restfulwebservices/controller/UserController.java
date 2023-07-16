@@ -3,6 +3,7 @@ package com.rest.webservices.restfulwebservices.controller;
 import com.rest.webservices.restfulwebservices.entity.User;
 import com.rest.webservices.restfulwebservices.exception.UserNotFoundException;
 import com.rest.webservices.restfulwebservices.repository.UserDaoService;
+import com.rest.webservices.restfulwebservices.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
@@ -13,30 +14,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private final UserDaoService userDaoService;
+    private final UserRepository userRepository;
 
     @GetMapping(value = "/users")
     public List<User> getUserList() {
-        return userDaoService.findAll();
+        return userRepository.findAll();
     }
 
     // EntityModel
     // WebMvcLinkBuilder
     @GetMapping(value = "/users/{id}")
     public EntityModel<User> getUser(@PathVariable Long id) {
-        User user = userDaoService.findOne(id);
+        Optional<User> user = userRepository.findById(id);
 
         if (user == null) {
             throw new UserNotFoundException("id = " + id);
         }
 
-        EntityModel<User> entityModel = EntityModel.of(user);
+        EntityModel<User> entityModel = EntityModel.of(user.get());
 
         WebMvcLinkBuilder link = linkTo(methodOn(this.getClass()).getUserList());
         entityModel.add(link.withRel("all-users"));
@@ -46,7 +48,7 @@ public class UserController {
 
     @PostMapping(value = "/users")
     public ResponseEntity<Object> saveUser(@Validated @RequestBody User user) {
-        User savedUser = userDaoService.save(user);
+        User savedUser = userRepository.save(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
                 .path("/{id}")
                 .buildAndExpand(savedUser.getId())
@@ -58,6 +60,6 @@ public class UserController {
 
     @DeleteMapping(value = "/users/{id}")
     public void deleteUser(@PathVariable Long id) {
-        userDaoService.deleteById(id);
+        userRepository.deleteById(id);
     }
 }
