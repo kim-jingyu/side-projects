@@ -53,6 +53,7 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	implementation 'jakarta.xml.bind:jakarta.xml.bind-api:4.0.0' // XML 문서와 Java 객체 간 매핑을 자동화
 
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
 
 	// Spring boot 3.x이상에서 QueryDsl 패키지를 정의하는 방법
 	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
