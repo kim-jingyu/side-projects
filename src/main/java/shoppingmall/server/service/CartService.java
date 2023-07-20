@@ -70,4 +70,30 @@ public class CartService {
 
         return cartDetailDtoList;
     }
+
+    // 장바구니 상품 - 회원 권한 확인
+    public boolean validateCartItem(Long cartItemId, String email) {
+        Member findMember = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
+
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        Member savedMember = cartItem.getCart().getMember();
+
+        if (!findMember.getEmail().equals(savedMember.getEmail())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    // 장바구니 상품 수량 변경
+    @Transactional
+    public void updateCartItemCount(Long cartItemId, int count) {
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(EntityNotFoundException::new);
+
+        cartItem.updateCount(count);
+    }
 }

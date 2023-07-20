@@ -1,6 +1,7 @@
 package shoppingmall.server.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -58,5 +59,24 @@ public class CartController {
         return ResponseEntity
                 .ok()
                 .body(cartDetailList);
+    }
+
+    // 장바구니 수량 변경
+    @PatchMapping(value = "/cartItem/{cartItemId}")
+    public @ResponseBody ResponseEntity updateCartItem(@PathVariable Long cartItemId, int count, Principal principal) {
+        if (count <= 0) {
+            return ResponseEntity
+                    .badRequest()
+                    .body("최소 1개이상 담아주세요.");
+        } else if (!cartService.validateCartItem(cartItemId, principal.getName())) {
+            return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("수정 권한이 없습니다.");
+        }
+
+        cartService.updateCartItemCount(cartItemId, count);
+        return ResponseEntity
+                .ok()
+                .body(cartItemId);
     }
 }
