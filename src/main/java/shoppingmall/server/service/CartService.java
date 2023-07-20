@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import shoppingmall.server.dto.CartDetailDto;
 import shoppingmall.server.dto.CartItemDto;
+import shoppingmall.server.dto.CartOrderDto;
+import shoppingmall.server.dto.OrderRequestDto;
 import shoppingmall.server.entity.Cart;
 import shoppingmall.server.entity.CartItem;
 import shoppingmall.server.entity.Item;
@@ -27,6 +29,7 @@ public class CartService {
     private final ItemRepository itemRepository;
     private final CartRepository cartRepository;
     private final CartItemRepository cartItemRepository;
+    private final OrderService orderService;
 
     @Transactional
     // 장바구니에 상품 담기
@@ -103,5 +106,32 @@ public class CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(EntityNotFoundException::new);
         cartItemRepository.delete(cartItem);
+    }
+
+    // 장바구니에서 여러 상품 주문
+    public Long orderItemsFromCart(List<CartOrderDto> cartOrderDtoList, String email) {
+        // 장바구니에서 상품들 주문
+        List<OrderRequestDto> orderRequestDtoList = new ArrayList<>();
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            OrderRequestDto orderRequestDto = new OrderRequestDto();
+            orderRequestDto.setItemId(cartItem.getItem().getItemId());
+            orderRequestDto.setCount(cartItem.getCount());
+            orderRequestDtoList.add(orderRequestDto);
+        }
+
+        Long orderId = orderService.orderItemsFromCart(orderRequestDtoList, email);
+
+        // 주문한 상품들 장바구니에서 삭제
+        for (CartOrderDto cartOrderDto : cartOrderDtoList) {
+            CartItem cartItem = cartItemRepository.findById(cartOrderDto.getCartItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            cartItemRepository.delete(cartItem);
+        }
+
+        return orderId;
     }
 }

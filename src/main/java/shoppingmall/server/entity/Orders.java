@@ -43,7 +43,7 @@ public class Orders extends BaseEntity{
     }
 
     // 생성 메서드
-    public static Orders createOrder(Member member, OrderItem... orderItems) {
+    public static Orders createOrder(Member member, List<OrderItem> orderItems) {
         Orders order = new Orders(member, LocalDateTime.now(), OrderStatus.ORDER);
         for (OrderItem orderItem : orderItems) {
             order.addOrderItem(orderItem);

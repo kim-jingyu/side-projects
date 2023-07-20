@@ -1,5 +1,6 @@
 package shoppingmall.server.service;
 
+import com.querydsl.core.types.Order;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -40,7 +41,7 @@ public class OrderService {
         // 주문할 상품 생성
         OrderItem orderItem = OrderItem.createOrderItem(item, requestDto.getCount());
 
-        Orders order = Orders.createOrder(member, orderItem);
+        Orders order = Orders.createOrder(member, List.of(orderItem));
         orderRepository.save(order);
 
         return OrderResponseDto
@@ -89,5 +90,25 @@ public class OrderService {
         if (!member.getEmail().equals(savedMember.getEmail())) return false;
 
         return true;
+    }
+
+    // 장바구니에서 상품 주문하기
+    public Long orderItemsFromCart(List<OrderRequestDto> orderRequestDtoList, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException(email));
+        List<OrderItem> orderItemList = new ArrayList<>();
+
+        for (OrderRequestDto orderRequestDto : orderRequestDtoList) {
+            Item item = itemRepository.findById(orderRequestDto.getItemId())
+                    .orElseThrow(EntityNotFoundException::new);
+
+            OrderItem orderItem = OrderItem.createOrderItem(item, orderRequestDto.getCount());
+            orderItemList.add(orderItem);
+        }
+
+        Orders order = Orders.createOrder(member, orderItemList);
+        orderRepository.save(order);
+
+        return order.getOrderId();
     }
 }
