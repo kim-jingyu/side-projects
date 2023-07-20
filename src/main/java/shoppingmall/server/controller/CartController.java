@@ -20,7 +20,7 @@ public class CartController {
     private final CartService cartService;
 
     @PostMapping(value = "/cart")
-    public @ResponseBody ResponseEntity addCart(@RequestBody @Validated CartItemDto cartItemDto, BindingResult bindingResult, Principal principal) {
+    public ResponseEntity addCart(@RequestBody @Validated CartItemDto cartItemDto, BindingResult bindingResult, Principal principal) {
 
         if (bindingResult.hasErrors()) {
             StringBuilder sb = new StringBuilder();
@@ -51,7 +51,7 @@ public class CartController {
 
     // 장바구니 목록 조회
     @GetMapping(value = "/cart")
-    public @ResponseBody ResponseEntity getCartDetail(Principal principal) {
+    public ResponseEntity getCartDetail(Principal principal) {
         String email = principal.getName();
 
         List<CartDetailDto> cartDetailList = cartService.getCartList(email);
@@ -63,7 +63,7 @@ public class CartController {
 
     // 장바구니 수량 변경
     @PatchMapping(value = "/cartItem/{cartItemId}")
-    public @ResponseBody ResponseEntity updateCartItem(@PathVariable Long cartItemId, int count, Principal principal) {
+    public ResponseEntity updateCartItem(@PathVariable Long cartItemId, int count, Principal principal) {
         if (count <= 0) {
             return ResponseEntity
                     .badRequest()
@@ -81,7 +81,7 @@ public class CartController {
     }
 
     @DeleteMapping(value = "/cartItem/{cartItemId}")
-    public @ResponseBody ResponseEntity deleteCartItem(@PathVariable Long cartItemId, Principal principal) {
+    public ResponseEntity deleteCartItem(@PathVariable Long cartItemId, Principal principal) {
         if (!cartService.validateCartItem(cartItemId, principal.getName())) {
             return ResponseEntity
                     .status(HttpStatus.FORBIDDEN)

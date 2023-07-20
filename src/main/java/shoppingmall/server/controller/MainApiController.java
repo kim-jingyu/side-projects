@@ -20,7 +20,7 @@ public class MainApiController {
     private final ItemService itemService;
 
     @GetMapping("/")
-    public @ResponseBody ResponseEntity getMainPage(ItemSearchDto itemSearchDto, Optional<Integer> page) {
+    public ResponseEntity getMainPage(ItemSearchDto itemSearchDto, Optional<Integer> page) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 6);
 
         Page<MainPageItemDto> mainPageItems = itemService.getMainItemPage(itemSearchDto, pageable);

@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import shoppingmall.server.dto.token.CreateAccessTokenRequest;
 import shoppingmall.server.dto.token.CreateAccessTokenResponse;
@@ -17,7 +16,7 @@ public class TokenApiController {
     private final TokenService tokenService;
 
     @PostMapping(value = "/api/token")
-    public @ResponseBody ResponseEntity createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
+    public ResponseEntity createNewAccessToken(@RequestBody CreateAccessTokenRequest request) {
         String newAccessToken = tokenService.createNewAccessToken(request.getRefreshToken());
 
         return ResponseEntity

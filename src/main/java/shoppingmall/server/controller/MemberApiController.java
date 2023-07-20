@@ -6,7 +6,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import shoppingmall.server.constant.Role;
-import shoppingmall.server.dto.LogInRequest;
 import shoppingmall.server.dto.MemberResponseDto;
 import shoppingmall.server.dto.SignUpRequest;
 import shoppingmall.server.service.MemberService;
@@ -17,7 +16,7 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping(value = "/user/signup")
-    public @ResponseBody ResponseEntity userSignup(@Validated SignUpRequest signUpRequest, BindingResult bindingResult) {
+    public ResponseEntity userSignup(@Validated SignUpRequest signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest().body(bindingResult.getFieldErrors());
@@ -30,7 +29,7 @@ public class MemberApiController {
     }
 
     @PostMapping(value = "/admin/signup")
-    public @ResponseBody ResponseEntity adminSignup(@Validated SignUpRequest signUpRequest, BindingResult bindingResult) {
+    public ResponseEntity adminSignup(@Validated SignUpRequest signUpRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest().body(bindingResult.getFieldErrors());
