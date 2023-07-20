@@ -74,6 +74,7 @@ public class OrderService {
     }
 
     // 주문 취소
+    @Transactional
     public void cancelOrder(Long orderId, String email) {
         Orders order = orderRepository.findByMember_EmailAndOrderId(email, orderId)
                 .orElseThrow(EntityNotFoundException::new);
@@ -93,6 +94,7 @@ public class OrderService {
     }
 
     // 장바구니에서 상품 주문하기
+    @Transactional
     public Long orderItemsFromCart(List<OrderRequestDto> orderRequestDtoList, String email) {
         Member member = memberRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email));

@@ -109,6 +109,7 @@ public class CartService {
     }
 
     // 장바구니에서 여러 상품 주문
+    @Transactional
     public Long orderItemsFromCart(List<CartOrderDto> cartOrderDtoList, String email) {
         // 장바구니에서 상품들 주문
         List<OrderRequestDto> orderRequestDtoList = new ArrayList<>();
