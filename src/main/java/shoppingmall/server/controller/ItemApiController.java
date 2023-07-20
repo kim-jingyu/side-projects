@@ -1,5 +1,7 @@
 package shoppingmall.server.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
+@Tag(name = "상품 관리 페이지", description = "관리자가 상품을 관리하는 페이지입니다.")
 @RestController
 @RequiredArgsConstructor
 @Slf4j
@@ -29,6 +32,7 @@ public class ItemApiController {
     private final ItemService itemService;
 
     // 상품 등록
+    @Operation(summary = "상품 등록")
     @PostMapping(value = "/admin/item")
     public ResponseEntity addItem(@Validated ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
@@ -52,6 +56,7 @@ public class ItemApiController {
     }
 
     // 상품 상세페이지
+    @Operation(summary = "상품 상세정보")
     @GetMapping(value = "/admin/item/{itemId}")
     public ResponseEntity getItemDetail(@PathVariable Long itemId) {
         ItemResponseDto itemResponseDto;
@@ -69,6 +74,7 @@ public class ItemApiController {
     }
 
     // 상품 수정
+    @Operation(summary = "상품 수정")
     @PutMapping(value = "/admin/item/{itemId}")
     public ResponseEntity updateItem(@PathVariable Long itemId, @Validated @ModelAttribute ItemRequestDto itemRequestDto, BindingResult bindingResult, @RequestParam("itemImgFile") List<MultipartFile> itemImgFileList) {
         ItemResponseDto itemResponseDto;
@@ -84,6 +90,7 @@ public class ItemApiController {
     }
 
     // 상품 리스트 조회
+    @Operation(summary = "상품 목록")
     @GetMapping(value = {"/admin/items", "/admin/items/{page}"})
     public ResponseEntity getItemList(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page) {
         Pageable pageable = PageRequest.of(page.isPresent() ? page.get() : 0, 3);

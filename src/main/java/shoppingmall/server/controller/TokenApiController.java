@@ -1,5 +1,6 @@
 package shoppingmall.server.controller;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,7 @@ import shoppingmall.server.dto.token.CreateAccessTokenRequest;
 import shoppingmall.server.dto.token.CreateAccessTokenResponse;
 import shoppingmall.server.service.TokenService;
 
+@Hidden
 @RestController
 @RequiredArgsConstructor
 public class TokenApiController {
