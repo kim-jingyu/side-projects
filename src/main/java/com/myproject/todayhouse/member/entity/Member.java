@@ -2,6 +2,7 @@ package com.myproject.todayhouse.member.entity;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
 import com.myproject.todayhouse.member.constants.Role;
+import com.myproject.todayhouse.member.dto.request.MemberRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -29,10 +30,10 @@ public class Member extends BaseTimeEntity {
     private Role role;
 
     @Builder
-    public Member(String email, String password, String nickName, Role role) {
-        this.email = email;
-        this.password = password;
-        this.nickName = nickName;
+    public Member(MemberRequest memberRequest, Role role) {
+        this.email = memberRequest.getEmail();
+        this.password = memberRequest.getPassword();
+        this.nickName = memberRequest.getNickName();
         this.role = role;
     }
 }
