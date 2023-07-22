@@ -22,4 +22,6 @@ public class ItemImg extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
+
+
 }
