@@ -1,4 +1,4 @@
-package com.myproject.todayhouse.member.domain;
+package com.myproject.todayhouse.member.repository;
 
 import com.myproject.todayhouse.member.domain.Member;
 import org.springframework.data.jpa.repository.JpaRepository;

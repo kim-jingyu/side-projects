@@ -1,6 +1,6 @@
 package com.myproject.todayhouse.member.dto.response;
 
-import com.myproject.todayhouse.member.constants.Role;
+import com.myproject.todayhouse.member.domain.Role;
 import com.myproject.todayhouse.member.domain.Member;
 import lombok.Builder;
 import lombok.Getter;

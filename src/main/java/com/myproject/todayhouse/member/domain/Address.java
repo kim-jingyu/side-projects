@@ -1,9 +1,6 @@
 package com.myproject.todayhouse.member.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +19,10 @@ public class Address {
     private String address1;
     private String address2;
     private boolean isDefault;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
 
     @Builder
     public Address(String addressName, String receiver, String phoneNumber, String address1, String address2, boolean isDefault) {
