@@ -1,4 +1,4 @@
-package com.myproject.todayhouse.member.entity;
+package com.myproject.todayhouse.member.domain;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
 import com.myproject.todayhouse.member.constants.Role;

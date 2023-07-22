@@ -1,4 +1,4 @@
-package com.myproject.todayhouse.member.entity;
+package com.myproject.todayhouse.member.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
