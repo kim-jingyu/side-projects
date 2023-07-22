@@ -28,6 +28,9 @@ public class Member extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @Embedded
+    private Address address;
+
     @Builder
     public Member(MemberRequest memberRequest, Role role) {
         this.email = memberRequest.getEmail();
