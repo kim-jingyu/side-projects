@@ -9,13 +9,11 @@ public class ItemImgRequest {
     private String uploadFileName;
     private String storedFileName;
     private String storedFileUrl;
-    private String representYn;
 
     @Builder
-    public ItemImgRequest(String uploadFileName, String storedFileName, String storedFileUrl, String representYn) {
+    public ItemImgRequest(String uploadFileName, String storedFileName, String storedFileUrl) {
         this.uploadFileName = uploadFileName;
         this.storedFileName = storedFileName;
         this.storedFileUrl = storedFileUrl;
-        this.representYn = representYn;
     }
 }

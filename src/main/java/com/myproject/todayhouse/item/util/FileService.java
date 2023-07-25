@@ -1,19 +1,20 @@
 package com.myproject.todayhouse.item.util;
 
 import com.myproject.todayhouse.item.dto.request.ItemImgRequest;
-import com.myproject.todayhouse.item.dto.response.ItemImgResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class FileService {
     @Value("${itemImgLocation}")
     private String itemImgLocation;
 
-    public ItemImgRequest storeFile(MultipartFile multipartFile, String representYn) throws IOException {
+    public ItemImgRequest storeFile(MultipartFile multipartFile) throws IOException {
         if (multipartFile.isEmpty()) {
             return null;
         }
@@ -30,8 +31,11 @@ public class FileService {
                 .uploadFileName(uploadFileName)
                 .storedFileName(storedFileName)
                 .storedFileUrl(storedFileUrl)
-                .representYn(representYn)
                 .build();
+    }
+
+    public void deleteFile(String filePath) throws IOException {
+        Files.delete(Path.of(filePath));
     }
 
     private String getExt(String uploadFileName) {

@@ -1,10 +1,14 @@
 package com.myproject.todayhouse.item.service;
 
 import com.myproject.todayhouse.item.domain.Item;
+import com.myproject.todayhouse.item.domain.ItemImg;
 import com.myproject.todayhouse.item.dto.request.ItemCreationRequest;
+import com.myproject.todayhouse.item.dto.request.ItemUpdateRequest;
 import com.myproject.todayhouse.item.dto.response.ItemImgResponse;
 import com.myproject.todayhouse.item.dto.response.ItemResponse;
+import com.myproject.todayhouse.item.exception.ItemImgNotFoundException;
 import com.myproject.todayhouse.item.exception.ItemNotFoundException;
+import com.myproject.todayhouse.item.repository.ItemImgRepository;
 import com.myproject.todayhouse.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +25,7 @@ import java.util.List;
 public class ItemService {
     private final ItemRepository itemRepository;
     private final ItemImgService itemImgService;
+    private final ItemImgRepository itemImgRepository;
 
     @Transactional
     public ItemResponse saveItem(ItemCreationRequest itemCreationRequest, List<MultipartFile> itemImgFileList) throws IOException {
@@ -33,6 +38,28 @@ public class ItemService {
             } else {
                 itemImgResponseList.add(itemImgService.saveItemImg(itemImgFileList.get(i), "N"));
             }
+        }
+
+        return ItemResponse.builder()
+                .item(item)
+                .itemImgResponseList(itemImgResponseList)
+                .build();
+    }
+
+    @Transactional
+    public ItemResponse updateItem(Long itemId, ItemUpdateRequest itemUpdateRequest, List<MultipartFile> itemImgFileList) throws IOException {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(ItemNotFoundException::new);
+        item.updateItem(itemUpdateRequest);
+
+        List<Long> itemImgIdList = itemUpdateRequest.getItemImgIdList();
+        List<ItemImgResponse> itemImgResponseList = new ArrayList<>();
+        for (int i = 0; i < itemImgIdList.size(); i++) {
+            Long itemImgId = itemImgIdList.get(i);
+            ItemImg itemImg = itemImgRepository.findByItem_ItemIdAndItemImgId(itemId, itemImgId)
+                    .orElseThrow(() -> new ItemImgNotFoundException(itemImgId));
+
+            itemImgResponseList.add(itemImgService.updateItemImg(itemImg, itemImgFileList.get(i)));
         }
 
         return ItemResponse.builder()

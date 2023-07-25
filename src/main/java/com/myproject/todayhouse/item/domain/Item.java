@@ -2,6 +2,7 @@ package com.myproject.todayhouse.item.domain;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
 import com.myproject.todayhouse.item.dto.request.ItemCreationRequest;
+import com.myproject.todayhouse.item.dto.request.ItemUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -44,12 +45,12 @@ public class Item extends BaseTimeEntity {
         return new Item(itemCreationRequest);
     }
 
-    public void updateItem(ItemCreationRequest itemCreationRequest) {
-        this.brandName = itemCreationRequest.getBrandName();
-        this.itemName = itemCreationRequest.getItemName();
-        this.price = itemCreationRequest.getPrice();
-        this.stockQuantity = itemCreationRequest.getStockQuantity();
-        this.itemDetail = itemCreationRequest.getItemDetail();
-        this.itemSellStatus = itemCreationRequest.getItemSellStatus();
+    public void updateItem(ItemUpdateRequest itemUpdateRequest) {
+        this.brandName = itemUpdateRequest.getBrandName();
+        this.itemName = itemUpdateRequest.getItemName();
+        this.price = itemUpdateRequest.getPrice();
+        this.stockQuantity = itemUpdateRequest.getStockQuantity();
+        this.itemDetail = itemUpdateRequest.getItemDetail();
+        this.itemSellStatus = itemUpdateRequest.getItemSellStatus();
     }
 }

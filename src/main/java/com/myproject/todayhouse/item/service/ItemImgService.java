@@ -21,13 +21,24 @@ public class ItemImgService {
 
     @Transactional
     public ItemImgResponse saveItemImg(MultipartFile multipartFile, String representYn) throws IOException {
-        ItemImgRequest itemImgRequest = fileService.storeFile(multipartFile, representYn);
+        ItemImgRequest itemImgRequest = fileService.storeFile(multipartFile);
 
-        ItemImg itemImg = ItemImg.createItemImg(itemImgRequest);
+        ItemImg itemImg = ItemImg.createItemImg(itemImgRequest, representYn);
         itemImgRepository.save(itemImg);
 
         return ItemImgResponse.builder()
                 .itemImg(itemImg)
+                .build();
+    }
+
+    @Transactional
+    public ItemImgResponse updateItemImg(ItemImg itemImg, MultipartFile multipartFile) throws IOException {
+        fileService.deleteFile(itemImg.getStoredFileUrl());
+        ItemImgRequest itemImgRequest = fileService.storeFile(multipartFile);
+        ItemImg updatedItemImg = itemImg.updateItemImg(itemImgRequest);
+
+        return ItemImgResponse.builder()
+                .itemImg(updatedItemImg)
                 .build();
     }
 }
