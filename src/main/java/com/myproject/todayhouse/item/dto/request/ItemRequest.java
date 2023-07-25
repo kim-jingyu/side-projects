@@ -1,5 +1,6 @@
 package com.myproject.todayhouse.item.dto.request;
 
+import com.myproject.todayhouse.item.domain.ItemSellStatus;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,4 +17,6 @@ public class ItemRequest {
     private int stockQuantity;
     @NotBlank
     private String itemDetail;
+    @NotBlank
+    private ItemSellStatus itemSellStatus;
 }
