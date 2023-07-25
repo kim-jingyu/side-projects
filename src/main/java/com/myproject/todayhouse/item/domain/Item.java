@@ -1,7 +1,7 @@
 package com.myproject.todayhouse.item.domain;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
-import com.myproject.todayhouse.item.dto.request.ItemCreationRequest;
+import com.myproject.todayhouse.item.dto.request.ItemCreateRequest;
 import com.myproject.todayhouse.item.dto.request.ItemUpdateRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -32,17 +32,17 @@ public class Item extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    private Item(ItemCreationRequest itemCreationRequest) {
-        this.brandName = itemCreationRequest.getBrandName();
-        this.itemName = itemCreationRequest.getItemName();
-        this.price = itemCreationRequest.getPrice();
-        this.stockQuantity = itemCreationRequest.getStockQuantity();
-        this.itemDetail = itemCreationRequest.getItemDetail();
-        this.itemSellStatus = itemCreationRequest.getItemSellStatus();
+    private Item(ItemCreateRequest itemCreateRequest) {
+        this.brandName = itemCreateRequest.getBrandName();
+        this.itemName = itemCreateRequest.getItemName();
+        this.price = itemCreateRequest.getPrice();
+        this.stockQuantity = itemCreateRequest.getStockQuantity();
+        this.itemDetail = itemCreateRequest.getItemDetail();
+        this.itemSellStatus = itemCreateRequest.getItemSellStatus();
     }
 
-    public static Item createItem(ItemCreationRequest itemCreationRequest) {
-        return new Item(itemCreationRequest);
+    public static Item createItem(ItemCreateRequest itemCreateRequest) {
+        return new Item(itemCreateRequest);
     }
 
     public void updateItem(ItemUpdateRequest itemUpdateRequest) {

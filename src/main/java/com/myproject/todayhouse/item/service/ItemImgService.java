@@ -3,6 +3,8 @@ package com.myproject.todayhouse.item.service;
 import com.myproject.todayhouse.item.domain.ItemImg;
 import com.myproject.todayhouse.item.dto.request.ItemImgRequest;
 import com.myproject.todayhouse.item.dto.response.ItemImgResponse;
+import com.myproject.todayhouse.item.exception.FileDeleteException;
+import com.myproject.todayhouse.item.exception.FileStoreException;
 import com.myproject.todayhouse.item.repository.ItemImgRepository;
 import com.myproject.todayhouse.item.util.FileService;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +18,17 @@ import java.io.IOException;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ItemImgService {
-    private ItemImgRepository itemImgRepository;
-    private FileService fileService;
+    private final ItemImgRepository itemImgRepository;
+    private final FileService fileService;
 
     @Transactional
-    public ItemImgResponse saveItemImg(MultipartFile multipartFile, String representYn) throws IOException {
-        ItemImgRequest itemImgRequest = fileService.storeFile(multipartFile);
+    public ItemImgResponse saveItemImg(MultipartFile multipartFile, String representYn) {
+        ItemImgRequest itemImgRequest;
+        try {
+            itemImgRequest = fileService.storeFile(multipartFile);
+        } catch (IOException e) {
+            throw new FileStoreException();
+        }
 
         ItemImg itemImg = ItemImg.createItemImg(itemImgRequest, representYn);
         itemImgRepository.save(itemImg);
@@ -32,9 +39,20 @@ public class ItemImgService {
     }
 
     @Transactional
-    public ItemImgResponse updateItemImg(ItemImg itemImg, MultipartFile multipartFile) throws IOException {
-        fileService.deleteFile(itemImg.getStoredFileUrl());
-        ItemImgRequest itemImgRequest = fileService.storeFile(multipartFile);
+    public ItemImgResponse updateItemImg(ItemImg itemImg, MultipartFile multipartFile) {
+        try {
+            fileService.deleteFile(itemImg.getStoredFileUrl());
+        } catch (IOException e) {
+            throw new FileDeleteException();
+        }
+
+        ItemImgRequest itemImgRequest;
+        try {
+            itemImgRequest = fileService.storeFile(multipartFile);
+        } catch (IOException e) {
+            throw new FileStoreException();
+        }
+
         ItemImg updatedItemImg = itemImg.updateItemImg(itemImgRequest);
 
         return ItemImgResponse.builder()

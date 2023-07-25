@@ -2,7 +2,7 @@ package com.myproject.todayhouse.item.service;
 
 import com.myproject.todayhouse.item.domain.Item;
 import com.myproject.todayhouse.item.domain.ItemImg;
-import com.myproject.todayhouse.item.dto.request.ItemCreationRequest;
+import com.myproject.todayhouse.item.dto.request.ItemCreateRequest;
 import com.myproject.todayhouse.item.dto.request.ItemUpdateRequest;
 import com.myproject.todayhouse.item.dto.response.ItemImgResponse;
 import com.myproject.todayhouse.item.dto.response.ItemResponse;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +27,8 @@ public class ItemService {
     private final ItemImgRepository itemImgRepository;
 
     @Transactional
-    public ItemResponse saveItem(ItemCreationRequest itemCreationRequest, List<MultipartFile> itemImgFileList) throws IOException {
-        Item item = Item.createItem(itemCreationRequest);
+    public ItemResponse saveItem(ItemCreateRequest itemCreateRequest, List<MultipartFile> itemImgFileList) {
+        Item item = Item.createItem(itemCreateRequest);
 
         List<ItemImgResponse> itemImgResponseList = new ArrayList<>();
         for (int i = 0; i < itemImgFileList.size(); i++) {
@@ -47,7 +46,7 @@ public class ItemService {
     }
 
     @Transactional
-    public ItemResponse updateItem(Long itemId, ItemUpdateRequest itemUpdateRequest, List<MultipartFile> itemImgFileList) throws IOException {
+    public ItemResponse updateItem(Long itemId, ItemUpdateRequest itemUpdateRequest, List<MultipartFile> itemImgFileList) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(ItemNotFoundException::new);
         item.updateItem(itemUpdateRequest);
