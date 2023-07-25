@@ -4,7 +4,6 @@ import com.myproject.todayhouse.common.BaseTimeEntity;
 import com.myproject.todayhouse.item.dto.request.ItemRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -32,14 +31,17 @@ public class Item extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    @Builder
-    public Item(ItemRequest itemRequest, ItemSellStatus itemSellStatus) {
+    private Item(ItemRequest itemRequest) {
         this.brandName = itemRequest.getBrandName();
         this.itemName = itemRequest.getItemName();
         this.price = itemRequest.getPrice();
         this.stockQuantity = itemRequest.getStockQuantity();
         this.itemDetail = itemRequest.getItemDetail();
-        this.itemSellStatus = itemSellStatus;
+        this.itemSellStatus = itemRequest.getItemSellStatus();
+    }
+
+    public static Item createItem(ItemRequest itemRequest) {
+        return new Item(itemRequest);
     }
 
     public void updateItem(ItemRequest itemRequest) {
