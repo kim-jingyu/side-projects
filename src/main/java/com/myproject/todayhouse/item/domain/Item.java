@@ -1,7 +1,7 @@
 package com.myproject.todayhouse.item.domain;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
-import com.myproject.todayhouse.item.dto.request.ItemRequest;
+import com.myproject.todayhouse.item.dto.request.ItemCreationRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -31,22 +31,25 @@ public class Item extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus;
 
-    private Item(ItemRequest itemRequest) {
-        this.brandName = itemRequest.getBrandName();
-        this.itemName = itemRequest.getItemName();
-        this.price = itemRequest.getPrice();
-        this.stockQuantity = itemRequest.getStockQuantity();
-        this.itemDetail = itemRequest.getItemDetail();
-        this.itemSellStatus = itemRequest.getItemSellStatus();
+    private Item(ItemCreationRequest itemCreationRequest) {
+        this.brandName = itemCreationRequest.getBrandName();
+        this.itemName = itemCreationRequest.getItemName();
+        this.price = itemCreationRequest.getPrice();
+        this.stockQuantity = itemCreationRequest.getStockQuantity();
+        this.itemDetail = itemCreationRequest.getItemDetail();
+        this.itemSellStatus = itemCreationRequest.getItemSellStatus();
     }
 
-    public static Item createItem(ItemRequest itemRequest) {
-        return new Item(itemRequest);
+    public static Item createItem(ItemCreationRequest itemCreationRequest) {
+        return new Item(itemCreationRequest);
     }
 
-    public void updateItem(ItemRequest itemRequest) {
-        this.price = itemRequest.getPrice();
-        this.stockQuantity = itemRequest.getStockQuantity();
-        this.itemDetail = itemRequest.getItemDetail();
+    public void updateItem(ItemCreationRequest itemCreationRequest) {
+        this.brandName = itemCreationRequest.getBrandName();
+        this.itemName = itemCreationRequest.getItemName();
+        this.price = itemCreationRequest.getPrice();
+        this.stockQuantity = itemCreationRequest.getStockQuantity();
+        this.itemDetail = itemCreationRequest.getItemDetail();
+        this.itemSellStatus = itemCreationRequest.getItemSellStatus();
     }
 }
