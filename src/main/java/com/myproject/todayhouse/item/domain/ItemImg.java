@@ -1,6 +1,7 @@
 package com.myproject.todayhouse.item.domain;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
+import com.myproject.todayhouse.item.dto.request.ItemImgRequest;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -23,5 +24,14 @@ public class ItemImg extends BaseTimeEntity {
     @JoinColumn(name = "item_id")
     private Item item;
 
+    private ItemImg(String uploadFileName, String storedFileName, String storedFileUrl, String representYn) {
+        this.uploadFileName = uploadFileName;
+        this.storedFileName = storedFileName;
+        this.storedFileUrl = storedFileUrl;
+        this.representYn = representYn;
+    }
 
+    public static ItemImg createItemImg(ItemImgRequest itemImgRequest) {
+        return new ItemImg(itemImgRequest.getUploadFileName(), itemImgRequest.getStoredFileName(), itemImgRequest.getStoredFileUrl(), itemImgRequest.getRepresentYn());
+    }
 }
