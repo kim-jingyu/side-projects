@@ -2,6 +2,7 @@ package com.myproject.todayhouse.item.service;
 
 import com.myproject.todayhouse.item.domain.Item;
 import com.myproject.todayhouse.item.domain.ItemImg;
+import com.myproject.todayhouse.item.dto.request.ItemAdminSearchRequest;
 import com.myproject.todayhouse.item.dto.request.ItemCreateRequest;
 import com.myproject.todayhouse.item.dto.request.ItemUpdateRequest;
 import com.myproject.todayhouse.item.dto.response.ItemImgResponse;
@@ -11,6 +12,8 @@ import com.myproject.todayhouse.item.exception.ItemNotFoundException;
 import com.myproject.todayhouse.item.repository.ItemImgRepository;
 import com.myproject.todayhouse.item.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,5 +68,9 @@ public class ItemService {
                 .item(item)
                 .itemImgResponseList(itemImgResponseList)
                 .build();
+    }
+
+    public Page<Item> getAdminItemPage(ItemAdminSearchRequest request, Pageable pageable) {
+        return itemRepository.getAdminItemPage(request, pageable);
     }
 }
