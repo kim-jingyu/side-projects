@@ -13,6 +13,7 @@ import com.myproject.todayhouse.item.repository.ItemImgRepository;
 import com.myproject.todayhouse.item.repository.ItemRepository;
 import com.myproject.todayhouse.item.util.FileService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ItemService {
@@ -60,6 +62,7 @@ public class ItemService {
         item.updateItem(itemUpdateRequest);
 
         List<Long> itemImgIdList = itemUpdateRequest.getItemImgIdList();
+        log.info("itemImgIdList's size = {}", itemImgIdList.size());
         List<ItemImgResponse> itemImgResponseList = new ArrayList<>();
         for (int i = 0; i < itemImgIdList.size(); i++) {
             Long itemImgId = itemImgIdList.get(i);

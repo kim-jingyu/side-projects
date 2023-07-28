@@ -43,7 +43,7 @@ public class ItemController {
     }
 
     @PutMapping("/admin/item/{itemId}")
-    public ResponseEntity updateItem(@PathVariable("itemId") Long itemId, @Validated @ModelAttribute ItemUpdateRequest itemUpdateRequest, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList, BindingResult bindingResult) {
+    public ResponseEntity updateItem(@PathVariable("itemId") Long itemId, ItemUpdateRequest itemUpdateRequest, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()

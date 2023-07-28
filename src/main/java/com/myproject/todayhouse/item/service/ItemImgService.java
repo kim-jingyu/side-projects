@@ -31,7 +31,7 @@ public class ItemImgService {
             throw new FileStoreException();
         }
 
-        ItemImg itemImg = ItemImg.createItemImg(itemImgRequest, representYn, item);
+        ItemImg itemImg = ItemImg.createItemImg(itemImgRequest, item);
         itemImgRepository.save(itemImg);
 
         return ItemImgResponse.builder()

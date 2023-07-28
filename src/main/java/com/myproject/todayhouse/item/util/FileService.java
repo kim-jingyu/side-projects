@@ -55,6 +55,7 @@ public class FileService {
                 .thumbFileUrl(thumbFileUrl)
                 .storedFileName(storedFileName)
                 .storedFileUrl(storedFileUrl)
+                .representYn(representYn)
                 .build();
     }
 

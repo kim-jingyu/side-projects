@@ -36,8 +36,8 @@ public class ItemImg extends BaseTimeEntity {
         this.item = item;
     }
 
-    public static ItemImg createItemImg(ItemImgRequest itemImgRequest, Boolean representYn, Item item) {
-        return new ItemImg(itemImgRequest.getUploadFileName(), itemImgRequest.getThumbFileName(), itemImgRequest.getThumbFileUrl(), itemImgRequest.getStoredFileName(), itemImgRequest.getStoredFileUrl(), representYn, item);
+    public static ItemImg createItemImg(ItemImgRequest itemImgRequest, Item item) {
+        return new ItemImg(itemImgRequest.getUploadFileName(), itemImgRequest.getThumbFileName(), itemImgRequest.getThumbFileUrl(), itemImgRequest.getStoredFileName(), itemImgRequest.getStoredFileUrl(), itemImgRequest.getRepresentYn(), item);
     }
 
     public ItemImg updateItemImg(ItemImgRequest itemImgRequest) {
