@@ -1,5 +1,6 @@
 package com.myproject.todayhouse.item.service;
 
+import com.myproject.todayhouse.item.domain.Item;
 import com.myproject.todayhouse.item.domain.ItemImg;
 import com.myproject.todayhouse.item.dto.request.ItemImgRequest;
 import com.myproject.todayhouse.item.dto.response.ItemImgResponse;
@@ -22,15 +23,15 @@ public class ItemImgService {
     private final FileService fileService;
 
     @Transactional
-    public ItemImgResponse saveItemImg(MultipartFile multipartFile, String representYn) {
+    public ItemImgResponse saveItemImg(MultipartFile multipartFile, Item item, Boolean representYn) {
         ItemImgRequest itemImgRequest;
         try {
-            itemImgRequest = fileService.storeFile(multipartFile);
+            itemImgRequest = fileService.storeFile(multipartFile, item.getItemId(), representYn);
         } catch (IOException e) {
             throw new FileStoreException();
         }
 
-        ItemImg itemImg = ItemImg.createItemImg(itemImgRequest, representYn);
+        ItemImg itemImg = ItemImg.createItemImg(itemImgRequest, representYn, item);
         itemImgRepository.save(itemImg);
 
         return ItemImgResponse.builder()
@@ -39,8 +40,11 @@ public class ItemImgService {
     }
 
     @Transactional
-    public ItemImgResponse updateItemImg(ItemImg itemImg, MultipartFile multipartFile) {
+    public ItemImgResponse updateItemImg(ItemImg itemImg, MultipartFile multipartFile, Long itemId, Boolean representYn) {
         try {
+            if (representYn) {
+                fileService.deleteFile(itemImg.getThumbFileUrl());
+            }
             fileService.deleteFile(itemImg.getStoredFileUrl());
         } catch (IOException e) {
             throw new FileDeleteException();
@@ -48,7 +52,7 @@ public class ItemImgService {
 
         ItemImgRequest itemImgRequest;
         try {
-            itemImgRequest = fileService.storeFile(multipartFile);
+            itemImgRequest = fileService.storeFile(multipartFile, itemId, representYn);
         } catch (IOException e) {
             throw new FileStoreException();
         }
