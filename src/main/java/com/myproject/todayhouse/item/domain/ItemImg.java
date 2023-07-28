@@ -16,29 +16,37 @@ public class ItemImg extends BaseTimeEntity {
     private Long itemImgId;
 
     private String uploadFileName;
+    private String thumbFileName;
+    private String thumbFileUrl;
     private String storedFileName;
     private String storedFileUrl;
-    private String representYn;
+    private boolean representYn;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     private Item item;
 
-    private ItemImg(String uploadFileName, String storedFileName, String storedFileUrl, String representYn) {
+    private ItemImg(String uploadFileName, String thumbFileName, String thumbFileUrl, String storedFileName, String storedFileUrl, Boolean representYn, Item item) {
         this.uploadFileName = uploadFileName;
+        this.thumbFileName = thumbFileName;
+        this.thumbFileUrl = thumbFileUrl;
         this.storedFileName = storedFileName;
         this.storedFileUrl = storedFileUrl;
         this.representYn = representYn;
+        this.item = item;
     }
 
-    public static ItemImg createItemImg(ItemImgRequest itemImgRequest, String representYn) {
-        return new ItemImg(itemImgRequest.getUploadFileName(), itemImgRequest.getStoredFileName(), itemImgRequest.getStoredFileUrl(), representYn);
+    public static ItemImg createItemImg(ItemImgRequest itemImgRequest, Boolean representYn, Item item) {
+        return new ItemImg(itemImgRequest.getUploadFileName(), itemImgRequest.getThumbFileName(), itemImgRequest.getThumbFileUrl(), itemImgRequest.getStoredFileName(), itemImgRequest.getStoredFileUrl(), representYn, item);
     }
 
     public ItemImg updateItemImg(ItemImgRequest itemImgRequest) {
         this.uploadFileName = itemImgRequest.getUploadFileName();
+        this.thumbFileName = itemImgRequest.getThumbFileName();
+        this.thumbFileUrl = itemImgRequest.getThumbFileUrl();
         this.storedFileName = itemImgRequest.getStoredFileName();
         this.storedFileUrl = itemImgRequest.getStoredFileUrl();
+        this.representYn = itemImgRequest.getRepresentYn();
         return this;
     }
 }
