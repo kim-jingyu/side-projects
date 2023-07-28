@@ -6,9 +6,6 @@ import lombok.*;
 @Embeddable
 @Getter @Setter
 public class Address {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long addressId;
-
     private String addressName;
     private String receiver;
     private String phoneNumber;
