@@ -53,4 +53,13 @@ public class Item extends BaseTimeEntity {
         this.itemDetail = itemUpdateRequest.getItemDetail();
         this.itemSellStatus = itemUpdateRequest.getItemSellStatus();
     }
+
+    // 비즈니스 메서드
+    public void addStock(int count) {
+        this.stockQuantity += count;
+    }
+
+    public void reduceStock(int count) {
+        this.stockQuantity -= count;
+    }
 }
