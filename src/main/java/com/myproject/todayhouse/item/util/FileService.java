@@ -37,7 +37,7 @@ public class FileService {
 
         String storedFileName = getStoredFileName(ext);
         String storedFileUrl = getStoredFileUrl(storedFileName, itemId);
-        Files.copy(multipartFile.getInputStream(), Paths.get(storedFileUrl));
+        multipartFile.transferTo(new File(storedFileUrl));
 
         String thumbFileName = null;
         String thumbFileUrl = null;
