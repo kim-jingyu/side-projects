@@ -80,4 +80,16 @@ public class ItemService {
     public Page<Item> getAdminItemPage(ItemAdminSearchRequest request, Pageable pageable) {
         return itemRepository.getAdminItemPage(request, pageable);
     }
+
+    public ItemResponse getItemDetail(Long itemId) {
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(ItemNotFoundException::new);
+
+        List<ItemImgResponse> itemImgResponseList = itemImgRepository.findItemImgResponse(itemId);
+
+        return ItemResponse.builder()
+                .item(item)
+                .itemImgResponseList(itemImgResponseList)
+                .build();
+    }
 }

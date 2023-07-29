@@ -9,8 +9,6 @@ import com.myproject.todayhouse.item.service.ItemService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -20,8 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
-
-import static com.myproject.todayhouse.item.domain.QItem.item;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,5 +60,11 @@ public class ItemController {
         return ResponseEntity
                 .ok()
                 .body(adminItemPage);
+    }
+
+    @GetMapping("/item/{itemId}")
+    public ResponseEntity getItemDetail(@PathVariable Long itemId) {
+        return ResponseEntity
+                .ok(itemService.getItemDetail(itemId));
     }
 }
