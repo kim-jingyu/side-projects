@@ -66,4 +66,12 @@ public class Orders extends BaseTimeEntity {
         }
         return totalPrice;
     }
+
+    public void cancelOrder() {
+        orderStatus = OrderStatus.CANCEL;
+
+        for (OrderItem orderItem : orderItemList) {
+            orderItem.cancelOrderItem();
+        }
+    }
 }

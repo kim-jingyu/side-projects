@@ -6,8 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OrderRepository extends JpaRepository<Orders, Long> {
     @Query("select new com.myproject.order.dto.response.OrderResponse(o.orderId, o.totalPrice, o.count) from Orders o join Member m where m.memberId = :memberId")
     List<OrderResponse> findOrderList(Long memberId);
+    Optional<Orders> findByOrders_OrderIdAndMember_Email(Long orderId, String email);
 }

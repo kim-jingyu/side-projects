@@ -11,6 +11,8 @@ import com.myproject.todayhouse.order.domain.OrderItem;
 import com.myproject.todayhouse.order.domain.Orders;
 import com.myproject.todayhouse.order.dto.request.OrderRequest;
 import com.myproject.todayhouse.order.dto.response.OrderResponse;
+import com.myproject.todayhouse.order.exception.OrderNotFoundException;
+import com.myproject.todayhouse.order.exception.OrderNotValidatedException;
 import com.myproject.todayhouse.order.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -53,5 +55,26 @@ public class OrderService {
                 .orElseThrow(MemberNotFoundException::new);
 
         return orderRepository.findOrderList(member.getMemberId());
+    }
+
+    public void cancelOrder(Long orderId, String email) {
+        if (!validateOrder(orderId, email)) {
+            throw new OrderNotValidatedException();
+        }
+
+        Orders order = orderRepository.findByOrders_OrderIdAndMember_Email(orderId, email)
+                .orElseThrow(OrderNotFoundException::new);
+        order.cancelOrder();
+    }
+
+    private boolean validateOrder(Long orderId, String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        Orders order = orderRepository.findById(orderId)
+                .orElseThrow(OrderNotFoundException::new);
+        Member orderMember = order.getMember();
+
+        return member.getMemberId().equals(orderMember.getMemberId());
     }
 }

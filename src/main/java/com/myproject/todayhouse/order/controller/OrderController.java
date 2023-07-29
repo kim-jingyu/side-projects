@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -30,6 +27,14 @@ public class OrderController {
 
     @GetMapping("/orders")
     public ResponseEntity getOrderList(String email) {
+        return ResponseEntity
+                .ok(orderService.getOrderList(email));
+    }
+
+    @DeleteMapping("/order/{orderId}")
+    public ResponseEntity cancelOrder(@PathVariable Long orderId, String email) {
+        orderService.cancelOrder(orderId, email);
+
         return ResponseEntity
                 .ok(orderService.getOrderList(email));
     }
