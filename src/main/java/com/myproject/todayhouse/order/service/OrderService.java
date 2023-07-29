@@ -16,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -44,5 +46,12 @@ public class OrderService {
                 .totalPrice(order.totalPrice())
                 .count(orderRequest.getCount())
                 .build();
+    }
+
+    public List<OrderResponse> getOrderList(String email) {
+        Member member = memberRepository.findByEmail(email)
+                .orElseThrow(MemberNotFoundException::new);
+
+        return orderRepository.findOrderList(member.getMemberId());
     }
 }
