@@ -29,7 +29,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping("/admin/item")
-    public ResponseEntity addItem(@Validated @ModelAttribute ItemCreateRequest itemCreateRequest, , BindingResult bindingResult, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList) {
+    public ResponseEntity addItem(@Validated @ModelAttribute ItemCreateRequest itemCreateRequest, BindingResult bindingResult, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
