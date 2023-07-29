@@ -29,7 +29,7 @@ public class ItemController {
     private final ItemService itemService;
 
     @PostMapping("/admin/item")
-    public ResponseEntity addItem(@Validated @ModelAttribute ItemCreateRequest itemCreateRequest, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList, BindingResult bindingResult) {
+    public ResponseEntity addItem(@Validated @ModelAttribute ItemCreateRequest itemCreateRequest, , BindingResult bindingResult, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
@@ -43,7 +43,7 @@ public class ItemController {
     }
 
     @PutMapping("/admin/item/{itemId}")
-    public ResponseEntity updateItem(@PathVariable("itemId") Long itemId, ItemUpdateRequest itemUpdateRequest, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList, BindingResult bindingResult) {
+    public ResponseEntity updateItem(@PathVariable("itemId") Long itemId, ItemUpdateRequest itemUpdateRequest, BindingResult bindingResult, @RequestParam("itemImgFileList") List<MultipartFile> itemImgFileList) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity
                     .badRequest()
