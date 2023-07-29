@@ -4,7 +4,7 @@ import com.myproject.todayhouse.member.domain.Role;
 import com.myproject.todayhouse.member.dto.request.MemberRequest;
 import com.myproject.todayhouse.member.dto.response.MemberResponse;
 import com.myproject.todayhouse.member.domain.Member;
-import com.myproject.todayhouse.member.exception.UserAlreadyExistsException;
+import com.myproject.todayhouse.member.exception.MemberAlreadyExistsException;
 import com.myproject.todayhouse.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class MemberService {
     private void validateMemberExists(MemberRequest memberRequest) {
         Optional<Member> findMember = memberRepository.findByEmail(memberRequest.getEmail());
         if (findMember.isPresent()) {
-            throw new UserAlreadyExistsException();
+            throw new MemberAlreadyExistsException();
         }
     }
 }
