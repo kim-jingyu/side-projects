@@ -1,6 +1,7 @@
 package com.myproject.todayhouse.order.domain;
 
 import com.myproject.todayhouse.common.BaseTimeEntity;
+import com.myproject.todayhouse.member.domain.Address;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -17,6 +18,22 @@ public class Delivery extends BaseTimeEntity {
     @Enumerated(value = EnumType.STRING)
     private DeliveryStatus deliveryStatus;
 
-    @OneToOne(mappedBy = "delivery", fetch = FetchType.LAZY)
+    @Embedded
+    private Address deliveryAddress;
+
+    @OneToOne(mappedBy = "delivery")
     private Orders order;
+
+    private Delivery(DeliveryStatus deliveryStatus, Address deliveryAddress) {
+        this.deliveryStatus = deliveryStatus;
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public void setOrder(Orders order) {
+        this.order = order;
+    }
+
+    public static Delivery createDelivery(Address deliveryAddress) {
+        return new Delivery(DeliveryStatus.READY, deliveryAddress);
+    }
 }
