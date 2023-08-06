@@ -48,15 +48,34 @@
 
             padding: 25px;
         }
+
+        #post-box {
+            display: none;
+        }
     </style>
 
     <script>
+        $(document).ready(function(){
+            alert('페이지가 로딩되었습니다.')
+        })
+
         function hey() {
             alert('안녕')
         }
 
         function hello() {
             console.log('Hello!')
+        }
+
+        function openclose() {
+            let status = $('#post-box').css('display')
+            if (status == 'block') {
+                $('#btn-posting-box').text("포스팅박스 열기")
+                $('#post-box').hide()
+            } else {
+                $('#btn-posting-box').text("포스팅박스 닫기")
+                $('#post-box').show()
+            }
         }
     </script>
 </head>
@@ -67,20 +86,20 @@
             <h1 class="display-4">나홀로 링크 메모장!</h1>
             <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다.</p>
             <hr class="my-4">
-            <a class="btn btn-primary btn-lg" href="#" role="button">포스팅박스 열기</a>
+            <button onclick="openclose()" type="button" class="btn btn-primary btn-lg" id="btn-posting-box">포스팅박스 열기</button>
         </div>
-        <form class="posting-box">
+        <form class="posting-box" id="post-box">
             <div class="form-group">
-                <label for="articelURL">아티클 URL</label>
-                <input type="text" class="form-control" id="articelURL">
+                <label for="article-url">아티클 URL</label>
+                <input type="text" class="form-control" id="article-url">
             </div>
             <div class="form-group">
-                <label for="simpleComment">간단 코멘트</label>
-                <textarea class="form-control" id="simpleComment"></textarea>
+                <label for="simple-comment">간단 코멘트</label>
+                <textarea class="form-control" id="simple-comment"></textarea>
             </div>
             <button onclick="hello()" type="button" class="btn btn-primary">기사저장</button>
         </form>
-        <div class="card-columns">
+        <div class="card-columns" id="cards-box">
             <div class="card">
                 <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
                     class="card-img-top" alt="Card image cap">
