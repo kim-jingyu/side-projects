@@ -2,10 +2,14 @@ import requests
 from bs4 import BeautifulSoup
 from pymongo import MongoClient
 
+client = MongoClient('localhost', 27017)
+db = client.daummovie
+
 
 def insert_all():
     # URL을 읽어서 HTML을 받아온다.
-    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"}
     data = requests.get('https://movie.daum.net/ranking/boxoffice/yearly', headers=headers)
 
     # HTML 을 BeautifulSoup 라이브러리를 활용해 검색에 용이한 상태로 만든다.
@@ -42,8 +46,20 @@ def insert_all():
         viewers_tag_element.find('span').decompose()
         viewers = viewers_tag_element.text
 
-        print("완료:", title, open_year, open_month, open_day, viewers)
+        doc = {
+            'title': title,
+            'open_year': open_year,
+            'open_month': open_month,
+            'open_day': open_day,
+            'viewers': viewers
+        }
+        db.movies.insert_one(doc)
+        print("데이터베이스 저장 완료 :", title, open_year, open_month, open_day, viewers)
+
 
 if __name__ == '__main__':
+    # 기존의 movies 컬렉션을 삭제하기
+    db.movies.drop()
+
     # 영화 사이트를 스크래핑해서 db에 채우기
     insert_all()
