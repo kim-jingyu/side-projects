@@ -14,11 +14,15 @@ db = client.daummovie
 def home():
     return render_template('index.html')
 
+# 포스팅 정보 리스트 나열
 @app.route('/memo', methods=['GET'])
 def listing():
     # 1. 모든 document 찾기 + _id 값은 출력에서 제외하기
+    # mongoDB에서 _id 값을 제외한 모든 데이터 조회해오기
+    result = list(db.articles.find({}, {'_id': False}))
+
     # 2. articles 라는 키 값으로 영화정보 내려주기
-    return jsonify({'result': 'success', 'msg': 'GET 연결되었습니다.'})
+    return jsonify({'result': 'success', 'msg': 'GET 연결되었습니다.', 'articles': result})
 
 # API 역할을 하는 부분
 # param : URL(url_give), comment(comment_give)
