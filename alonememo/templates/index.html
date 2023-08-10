@@ -53,7 +53,7 @@
     </style>
 
     <script>
-        $(document).ready(function(){
+        $(document).ready(function () {
             $('#cards-box').html('')
             showArticles()
         })
@@ -75,9 +75,16 @@
                 url: "/memo",
                 data: {},
                 success: function (response) {
+                    // 1. /memo에 GET 방식으로 메모 정보 요청하고, articles로 메모 정보 받기
+                    let articles = response['articles']
                     if (response['result'] == 'success') {
                         alert(response['msg'])
-                    } 
+                    }
+
+                    // 2. makeCard 함수를 이용해서 카드 HTML 붙이기
+                    for (let i = 0; i < articles.length; i++) {
+                        makeCard(articles[i]["image"], articles[i]["url"], articles[i]["title"], articles[i]["desc"], articles[i]["comment"])
+                    }
                 }
             })
         }
@@ -94,7 +101,7 @@
             $.ajax({
                 type: "POST",
                 url: "/memo",
-                data: { url_give: url, comment_give: comment},
+                data: { url_give: url, comment_give: comment },
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('포스팅 성공!', response['msg'])
@@ -106,6 +113,18 @@
                 }
             })
         }
+
+        function makeCard(image, url, title, desc, comment) {
+            let temp_html = `<div class="card">
+                                <img src="${image}" class="card-img-top" alt="Card image cap">
+                                <div class="card-body">
+                                    <a href="${url}" class="card-title" target="_blank">${title}</a>
+                                    <p class="card-text">${desc}</p>
+                                    <p class="card-text comment">${comment}</p>
+                                </div>
+                            </div>`
+            $('#cards-box').append(temp_html)
+        }
     </script>
 </head>
 
@@ -115,7 +134,8 @@
             <h1 class="display-4">나홀로 링크 메모장!</h1>
             <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다.</p>
             <hr class="my-4">
-            <button onclick="openClose()" type="button" class="btn btn-primary btn-lg" id="btn-posting-box">포스팅박스 열기</button>
+            <button onclick="openClose()" type="button" class="btn btn-primary btn-lg" id="btn-posting-box">포스팅박스
+                열기</button>
         </div>
         <form class="posting-box" id="post-box">
             <div class="form-group">
