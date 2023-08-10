@@ -21,11 +21,36 @@ def listing():
     return jsonify({'result': 'success', 'msg': 'GET 연결되었습니다.'})
 
 # API 역할을 하는 부분
+# param : URL(url_give), comment(comment_give)
+# return : url, title, description, 이미지URL(image), comment
 @app.route('/memo', methods=['POST'])
 def saving():
     # 1. 클라이언트로부터 데이터를 받기
+    url_receive = request.form['url_give']
+    comment_receive = request.form['comment_give']
+
     # 2. meta tag를 스크래핑하기
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36'}
+    data = requests.get(url_receive, headers=headers)
+    soup = BeautifulSoup(data.text, 'html.parser')
+
+    og_image = soup.select_one('meta[property="og:image"]')
+    og_title = soup.select_one('meta[property="og:title"]')
+    og_description = soup.select_one('meta[property="og:description"]')
+
+    url_image = og_image['content']
+    url_title = og_title['content']
+    url_description = og_description['content']
+
+    article = {'url': url_receive,
+               'title': url_title,
+               'desc': url_description,
+               'image': url_image,
+               'comment': comment_receive}
+
     # 3. mongoDB에 데이터 넣기
+    db.articles.insert_one(article)
+
     return jsonify({'result': 'success', 'msg': 'POST 연결되었습니다.'})
 
 
