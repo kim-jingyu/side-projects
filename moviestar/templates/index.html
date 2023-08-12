@@ -25,7 +25,7 @@
 
     <title>My Favorite Movie</title>
 
-    <style>
+    <style type="text/css">
         .center {
             text-align: center;
         }
@@ -37,6 +37,11 @@
         .movie-list {
             width: 500px;
             margin: 20px auto 0 auto;
+        }
+
+        .movie-poster {
+            width: 200px;
+            height: 300px;
         }
 
         .movie-title {
@@ -51,6 +56,155 @@
             margin-bottom: 15px;
         }
     </style>
+
+    <script type="text/javascript">
+        const Sort = {
+            BY_LIKES: "likes",
+            BY_VIEWERS: "viewers",
+            BY_DATE: "date"
+        };
+
+        let sortMode = Sort.BY_LIKES
+        let trashMode = false
+
+        // index.html의 로드가 완료되면 ready 안에 등록된 함수가 자동 호출된다.
+        $(document).ready(function(){
+            // 영화 목록을 보여준다.
+            showMovie()
+
+            // 현재 적용되고 있는 정렬 방식의 버튼이 눌려져 있게 보이는 효과를 준다.
+            displaySorter()
+
+            // 휴지통 모드에 따라 메뉴를 다르게 바꿔준다.
+            displayTrashMode(trashMode)
+        })
+
+        function showMovie() {
+            // 1. id="movie-box" 로 된 태그의 내부 html 태그를 모두 삭제한다.
+            $('#movie-box').empty()
+
+            // 2. 휴지통을 보고있는지 여부에 따라 호출할 API를 선택한다.
+            // 휴지통이 아닐 경우, GET /api/list
+            // 휴지통일 경우, GET /api/list/trash
+            if (trashMode == false) {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/list",
+                    data: {'sortMode': sortMode},
+                    success: function(response) {
+                        if (response['result'] != 'success') {
+                            alert(sortMode + ' 순으로 영화 목록 받아오기 실패!')
+                            return
+                        }
+                        // 3. 서버가 돌려준 movies_list를 movies 라는 변수에 저장한다.
+                        let movies = response['movies_list']
+
+                        // 4. 영화 카드를 추가한다.
+                        addMovieCards(movies, false)
+                    }
+                })
+            } else {
+                alert('휴지통 보기 API를 만들어서 query를 보낸다.')
+            }
+        }
+
+        function addMovieCards(movies, trashMode) {
+            for (let movie in movies) {
+                let id = movie['_id']
+                let title = movie['title']
+                let viewers = movie['viewers']
+                let likes = movie['likes']
+                let poster_url = movie['poster_url']
+
+                // 영화 카드 만들기
+                let cardContentHtml = `
+                    <img src="${poster_url}" class="movie-poster" />
+                    <span class="movie-title">${title}</span>
+                    <span class="icon"><i class="fas fa-thumbs-up"></i></span><span class="movie-likes">${likes}</span>
+                    누적관객수 <span class="movie-viewers">${viewers}</span>명
+                    개봉일 <span class="movie-date"></span>
+                `
+
+                // 휴지통을 보고있는지 여부에 따라 카드의 버튼을 다르게 설정해준다.
+                let cardFooterHtml = ''
+                if (trashMode == false) {
+                    cardFooterHtml = `
+                        <a href="#" onclick="likeMovie()">
+                        위로!
+                        </a>
+                        <a href="#" onclick="trashMode()">
+                        휴지통으로
+                        </a>
+                    `
+                } else {
+                    cardFooterHtml = `
+                        <a href="#" onclick="restoreMovie()">
+                        복구하기
+                        </a>
+                        <a href="#" onclick="deleteMovie()">
+                        영구삭제
+                        </a>
+                    `
+                }
+
+                $('#movie-box').append(`
+                    <div class="card">
+                        ${cardContentHtml}
+                        ${cardFooterHtml}
+                    </div>
+                `)
+            }
+        }
+
+        function likeMovie() {
+            $.ajax({
+                type: "POST",
+                url: "/api/like",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('좋아요 완료!')
+                        showMovie()
+                    } else {
+                        alert('좋아요 실패ㅠㅠ')
+                    }
+                }
+            })
+        }
+
+        function trashMovie() {
+            alert('휴지통 보내기 기능 api 호출')
+        }
+
+        function restoreMovie() {
+            alert('휴지통에서 되살리기 기능 api 호출')
+        }
+
+        function deleteMovie() {
+            alert('휴지통에서 완전 삭제 기능 api 호출')
+        }
+
+        function changeSorter(newMode) {
+            if (sortMode == newMode) {
+                return
+            }
+
+            sortMode = newMode
+            displaySorter()
+            showMovie()
+        }
+
+        // 정렬 기준에 따라 해당 버튼만 활성화시키고 다른 버튼은 비활성화시킴
+        function displaySorter() {
+            document.getElementById('sorter-likes').classList.remove('active')
+            document.getElementById('sorter-viewers').classList.remove('active')
+            document.getElementById('sorter-date').classList.remove('active')
+        }
+
+        function displayTrashMode(trashMode) {
+            // trashMode에 따라 "휴지통 보기" 또는 "휴지통 나가기"가 출력되게 구현해야 한다.
+        }
+    </script>
 </head>
 
 <body>
