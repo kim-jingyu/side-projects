@@ -40,11 +40,35 @@ def home():
     return render_template('index.html')
 
 
+# 휴지통에 버려지지 않은 영화 목록을 반환한다.
 @app.route('/api/list', methods=['GET'])
 def show_movies():
+    # 클라이언트에서 요청한 정렬 방식이 있는지를 확인한다.
     sortMode = request.args.get('sortMode', 'likes')
 
     if sortMode == 'likes':
         movies = list(db.movies.find({'trashed': False}, {}))
     else:
         return jsonify({'result': 'failure'})
+
+    # 성공하면 success 메시지와 함께 movie_list 목록을 클라이언트에 전달
+    return jsonify({'result': 'success', 'movies_list': movies})
+
+
+@app.route('/api/like', methods=['POST'])
+def like_movie():
+    find_id = request.form['id']
+    movie = db.movies.find_one({'_id': (ObjectId(find_id))})
+    new_likes = movie['likes'] + 1
+
+    result = db.movies.update_one({'_id': (ObjectId(find_id))}, {'$set': {'likes': new_likes}})
+
+    if result.modified_count == 1:
+        return jsonify({'result': 'success'})
+    else:
+        return jsonify({'result': 'failure'})
+
+
+if __name__ == '__main__':
+    print(sys.executable)
+    app.run('0.0.0.0', port=5001, debug=True)
