@@ -42,10 +42,12 @@
         .movie-poster {
             width: 200px;
             height: 300px;
+            display: inline-block;
         }
 
-        .movie-title {
+        .movie-info {
             display: inline-block;
+            font-size: larger;
         }
 
         .movie-title:hover {
@@ -54,6 +56,11 @@
 
         .card {
             margin-bottom: 15px;
+        }
+
+        .card-footer {
+            display: block;
+            text-align: center;
         }
     </style>
 
@@ -109,41 +116,58 @@
         }
 
         function addMovieCards(movies, trashMode) {
-            for (let movie in movies) {
+            for (let i = 0; i < movies.length; i++) {
+                let movie = movies[i]
+
                 let id = movie['_id']
                 let title = movie['title']
                 let viewers = movie['viewers']
                 let likes = movie['likes']
                 let poster_url = movie['poster_url']
+                let open_year = movie['open_year']
+                let open_month = movie['open_month']
+                let open_day = movie['open_day']
 
                 // 영화 카드 만들기
                 let cardContentHtml = `
                     <img src="${poster_url}" class="movie-poster" />
-                    <span class="movie-title">${title}</span>
-                    <span class="icon"><i class="fas fa-thumbs-up"></i></span><span class="movie-likes">${likes}</span>
-                    누적관객수 <span class="movie-viewers">${viewers}</span>명
-                    개봉일 <span class="movie-date"></span>
+                    <div class="movie-info">
+                        <span class="movie-title">${title}</span>
+                        <div>
+                            <span class="icon"><i class="fas fa-thumbs-up"></i></span><span class="movie-likes">${likes}</span>
+                        </div>
+                        <div>
+                            누적관객수 <span class="movie-viewers">${viewers}</span>
+                        </div>
+                        <div>
+                            개봉일 <span class="movie-date">${open_year}.${open_month}.${open_day}</span>
+                        </div>
+                    </div>
                 `
 
                 // 휴지통을 보고있는지 여부에 따라 카드의 버튼을 다르게 설정해준다.
                 let cardFooterHtml = ''
                 if (trashMode == false) {
                     cardFooterHtml = `
-                        <a href="#" onclick="likeMovie()">
-                        위로!
-                        </a>
-                        <a href="#" onclick="trashMode()">
-                        휴지통으로
-                        </a>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-outline-primary" onclick="likeMovie('${id}')">
+                            위로!
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" onclick="trashMode()">
+                            휴지통으로
+                            </button>
+                        </div>
                     `
                 } else {
                     cardFooterHtml = `
-                        <a href="#" onclick="restoreMovie()">
-                        복구하기
-                        </a>
-                        <a href="#" onclick="deleteMovie()">
-                        영구삭제
-                        </a>
+                        <div class="card-footer">
+                            <button type="button" class="btn btn-outline-primary" onclick="restoreMovie()">
+                            복구하기
+                            </button>
+                            <button type="button" class="btn btn-outline-primary" onclick="deleteMovie()">
+                            영구삭제
+                            </button>
+                        </div>
                     `
                 }
 
@@ -156,11 +180,11 @@
             }
         }
 
-        function likeMovie() {
+        function likeMovie(id) {
             $.ajax({
                 type: "POST",
                 url: "/api/like",
-                data: {},
+                data: {'id': id},
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert('좋아요 완료!')
@@ -225,9 +249,9 @@
     <!-- 정렬 옵션 부분 -->
     <div class="mx-auto sorter-box">
         <div class="btn-group m-3 mx-auto w-100">
-            <a href="#" class="btn btn-primary" id="sorter-likes" onclick="">좋아요 순으로 정렬</a>
-            <a href="#" class="btn btn-primary" id="sorter-viewers" onclick="">누적관객수 순으로 정렬</a>
-            <a href="#" class="btn btn-primary" id="sorter-date" onclick="">개봉일 순으로 정렬</a>
+            <a href="#" class="btn btn-primary" id="sorter-likes" onclick="changeSorter('likes')">좋아요 순으로 정렬</a>
+            <a href="#" class="btn btn-primary" id="sorter-viewers" onclick="changeSorter('viewers')">누적관객수 순으로 정렬</a>
+            <a href="#" class="btn btn-primary" id="sorter-date" onclick="changeSorter('date')">개봉일 순으로 정렬</a>
         </div>
     </div>
 
