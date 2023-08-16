@@ -45,11 +45,32 @@
             padding: 25px;
         }
 
+        #arti-box {
+            display: none;
+        }
+
         .comment {
             color: blue;
             font-weight: bold;
         }
     </style>
+
+    <script>
+        $(document).ready(function () {
+            alert('페이지가 로딩되었습니다.');
+        })
+
+        function openclose() {
+            let status = $('#arti-box').css('display')
+            if (status == 'block') {
+                $('#arti-box').hide()
+                $('#btn-posting-box').text('포스팅박스 열기')
+            } else {
+                $('#arti-box').show()
+                $('#btn-posting-box').text('포스팅박스 닫기')
+            }
+        }
+    </script>
 </head>
 
 <body>
@@ -58,9 +79,9 @@
             <h1>나홀로 링크 메모장!</h1>
             <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다.</p>
             <hr>
-            <button class="btn btn-primary">포스팅박스 열기</button>
+            <button class="btn btn-primary" id="btn-posting-box" onclick="openclose()">포스팅박스 열기</button>
         </div>
-        <form class="article-box">
+        <form class="article-box" id="arti-box">
             <div class="form-group">
                 <label for="article-url">아티클 URL</label>
                 <input type="text" class="form-control" id="article-url">
@@ -71,7 +92,7 @@
             </div>
             <button class="btn btn-primary">기사저장</button>
         </form>
-        <div class="card-columns">
+        <div class="card-columns" id="cards-box">
             <div class="card">
                 <img src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
                     class="card-img-top" alt="Card image cap">
