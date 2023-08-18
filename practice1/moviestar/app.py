@@ -97,5 +97,26 @@ def like_movie():
     return jsonify({'result': 'success', 'msg': movie['title'] + '좋아요!'})
 
 
+@app.route('/movie/trash/restore', methods=['POST'])
+def restore_trashed_movie():
+    find_id = request.form['id']
+    movie = db.movies.find_one({'_id': ObjectId(find_id)})
+
+    result = db.movies.update_one({'_id': ObjectId(find_id)}, {'$set': {'trashed': False}})
+
+    print(result.modified_count)
+    return jsonify({'result': 'success', 'msg': movie['title'] + ' 복구되었습니다!'})
+
+
+@app.route('/movie/trash', methods=['DELETE'])
+def delete_trashed_movie():
+    find_id = request.form['id']
+    movie_title = db.movies.find_one({'_id': ObjectId(find_id)})['title']
+
+    db.movies.delete_one({'_id': ObjectId(find_id)})
+
+    return jsonify({'result': 'success', 'msg': movie_title + '영구 삭제되었습니다!'})
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', 5001, debug=True)

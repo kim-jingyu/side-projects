@@ -107,6 +107,7 @@
                         if (response['result'] == 'success') {
                             alert(response['msg'])
                             let movies = response['movies_list']
+                            console.log(movies)
 
                             addMovieCards(movies, true)
                         }
@@ -194,12 +195,46 @@
             displaySorter()
         }
 
-        function restoreMovie() {
-
+        function restoreMovie(id) {
+            restoreFromTrash(id)
+            showMovies()
+            displaySorter()
         }
 
-        function deleteMovie() {
+        function restoreFromTrash(id) {
+            $.ajax({
+                type: 'POST',
+                url: '/movie/trash/restore',
+                data: { 'id': id },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg'])
+                    } else {
+                        alert('복구에 실패했습니다!')
+                    }
+                }
+            })
+        }
 
+        function deleteMovie(id) {
+            deleteFromTrash(id)
+            showMovies()
+            displaySorter()
+        }
+
+        function deleteFromTrash(id) {
+            $.ajax({
+                type: 'DELETE',
+                url: '/movie/trash',
+                data: { 'id': id },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert(response['msg'])
+                    } else {
+                        alert('영구 삭제에 실패했습니다!')
+                    }
+                }
+            })
         }
 
         function toTrash(id) {
