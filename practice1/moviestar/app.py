@@ -1,6 +1,3 @@
-import requests
-from bs4 import BeautifulSoup
-
 from pymongo import MongoClient
 from flask import Flask, request, render_template, jsonify
 from flask.json.provider import JSONProvider
@@ -10,8 +7,8 @@ import json
 
 app = Flask(__name__)
 
-client = MongoClient('localhost', 27017)
-db = client.jungle
+client = MongoClient('mongodb://test:test@localhost', 27017)
+db = client.dbjungle
 
 
 class CustomJSONEncoder(json.JSONEncoder):
@@ -37,11 +34,9 @@ def home():
     return render_template('index.html')
 
 
-@app.route('/movie', methods=['GET'])
+@app.route('/movie/list', methods=['GET'])
 def show_movies():
     sort_mode = request.args.get('sortMode', 'likes')
-
-    print(sort_mode)
 
     movies = []
     if sort_mode == 'likes':
@@ -59,8 +54,6 @@ def show_movies():
 @app.route('/movie/trash', methods=['GET'])
 def show_trashed_movies():
     sort_mode = request.args.get('sortMode', 'likes')
-
-    print(sort_mode)
 
     movies = []
     if sort_mode == 'likes':
@@ -82,7 +75,7 @@ def to_trashed_movie():
     result = db.movies.update_one({'_id': ObjectId(find_id)}, {'$set': {'trashed': True}})
 
     print(result.modified_count)
-    return jsonify({'result': 'success', 'msg': db.movies.find_one({'_id': ObjectId(find_id)})['title'] + ' 휴지통으로~~'})
+    return jsonify({'result': 'success', 'msg': db.movies.find_one({'_id': ObjectId(find_id)})['title'] + ' 휴지통 보내기 완료!'})
 
 
 @app.route('/movie/like', methods=['POST'])
@@ -91,10 +84,9 @@ def like_movie():
     movie = db.movies.find_one({'_id': ObjectId(find_id)})
     new_likes = movie['likes'] + 1
 
-    result = db.movies.update_one({'_id': ObjectId(find_id)}, {'$set': {'likes': new_likes}})
+    db.movies.update_one({'_id': ObjectId(find_id)}, {'$set': {'likes': new_likes}})
 
-    print(result, result.modified_count)
-    return jsonify({'result': 'success', 'msg': movie['title'] + '좋아요!'})
+    return jsonify({'result': 'success', 'msg': movie['title'] + ' 좋아요 완료!'})
 
 
 @app.route('/movie/trash/restore', methods=['POST'])
@@ -102,10 +94,9 @@ def restore_trashed_movie():
     find_id = request.form['id']
     movie = db.movies.find_one({'_id': ObjectId(find_id)})
 
-    result = db.movies.update_one({'_id': ObjectId(find_id)}, {'$set': {'trashed': False}})
+    db.movies.update_one({'_id': ObjectId(find_id)}, {'$set': {'trashed': False}})
 
-    print(result.modified_count)
-    return jsonify({'result': 'success', 'msg': movie['title'] + ' 복구되었습니다!'})
+    return jsonify({'result': 'success', 'msg': movie['title'] + ' 복구 완료!'})
 
 
 @app.route('/movie/trash', methods=['DELETE'])
@@ -115,8 +106,8 @@ def delete_trashed_movie():
 
     db.movies.delete_one({'_id': ObjectId(find_id)})
 
-    return jsonify({'result': 'success', 'msg': movie_title + '영구 삭제되었습니다!'})
+    return jsonify({'result': 'success', 'msg': movie_title + ' 영구 삭제 완료!'})
 
 
 if __name__ == '__main__':
-    app.run('0.0.0.0', 5001, debug=True)
+    app.run('0.0.0.0', 5000, debug=True)
