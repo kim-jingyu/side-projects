@@ -20,6 +20,34 @@
     <script defer src="https://use.fontawesome.com/releases/v6.4.0/js/all.js"></script>
 
     <style>
+        div.clickEffect {
+            position: fixed;
+            box-sizing: border-box;
+            border-style: solid;
+            border-color: black;
+            border-radius: 50%;
+            animation: clickEffect 0.4s ease-out;
+            z-index: 99999;
+        }
+
+        @keyframes clickEffect {
+            0% {
+                opacity: 1;
+                width: 0.5em;
+                height: 0.5em;
+                margin: -0.25em;
+                border-width: 0.5em;
+            }
+
+            100% {
+                opacity: 0.2;
+                width: 5em;
+                height: 5em;
+                margin: -2.5em;
+                border-width: 0.03em;
+            }
+        }
+
         .center {
             text-align: center;
         }
@@ -28,28 +56,40 @@
             width: 500px;
         }
 
+        .trash-button {
+            color: turquoise;
+            font-weight: bold;
+        }
+
+        .trash-button:hover {
+            color: lightseagreen;
+        }
+
         .movie-list {
             width: 500px;
+            margin: 20px auto 0 auto;
         }
 
         .card {
             width: 500px;
             margin-top: 20px;
-            display: inline-block;
+        }
+
+        .card-content {
+            display: flex;
+            flex-direction: row;
         }
 
         .movie-poster {
-            width: 200px;
-            height: 300px;
-        }
-
-        .movie-info {
-            display: inline-block;
+            width: 75px;
+            height: 106px;
+            margin: 0px 20px 0px 0px;
         }
 
         .movie-title {
-            font-size: xx-large;
+            font-size: x-large;
             font-weight: bold;
+            color: black;
         }
 
         .movie-title:hover {
@@ -57,8 +97,61 @@
         }
 
         .card-footer {
-            display: block;
-            text-align: center;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-evenly;
+            align-items: center;
+            font-size: large;
+        }
+
+        .movie-button1 {
+            background-color: white;
+            color: dodgerblue;
+            border: none;
+            padding: 0px 20px;
+        }
+
+        .movie-button1:hover {
+            background-color: white;
+            color: darkblue;
+            border: none;
+            padding: 0px 20px;
+        }
+
+        .movie-button2 {
+            background-color: white;
+            color: crimson;
+            border: none;
+        }
+
+        .movie-button2:hover {
+            background-color: white;
+            color: darkred;
+            border: none;
+        }
+
+        .movie-button3 {
+            background-color: white;
+            color: dodgerblue;
+            border: none;
+        }
+
+        .movie-button3:hover {
+            background-color: white;
+            color: darkblue;
+            border: none;
+        }
+
+        .movie-button4 {
+            background-color: white;
+            color: crimson;
+            border: none;
+        }
+
+        .movie-button4:hover {
+            background-color: white;
+            color: darkred;
+            border: none;
         }
 
         .active {
@@ -77,8 +170,7 @@
         let trashMode = false
 
         $(document).ready(function () {
-            showMovies()
-            displaySorter()
+            displayTrashMode()
         })
 
         function showMovies() {
@@ -86,30 +178,30 @@
             if (trashMode == false) {
                 $.ajax({
                     type: 'GET',
-                    url: '/movie',
+                    url: '/movie/list',
                     data: { 'sortMode': sortMode },
                     success: function (response) {
                         if (response['result'] == 'success') {
-                            alert(response['msg'])
                             let movies = response['movies_list']
 
                             addMovieCards(movies, false)
+                        } else {
+                            alert(sortMode + ' 순으로 영화 목록 받아오기 실패!')
                         }
                     }
                 })
             } else {
-                console.log('trash mode 입니다!')
                 $.ajax({
                     type: 'GET',
                     url: '/movie/trash',
                     data: { 'sortMode': sortMode },
                     success: function (response) {
                         if (response['result'] == 'success') {
-                            alert(response['msg'])
                             let movies = response['movies_list']
-                            console.log(movies)
 
                             addMovieCards(movies, true)
+                        } else {
+                            alert(sortMode + ' 순으로 영화 목록 받아오기 실패!')
                         }
                     }
                 })
@@ -124,21 +216,25 @@
                 let open_month = movies[i]['open_month']
                 let open_day = movies[i]['open_day']
                 let audience = movies[i]['audience']
+                audience = audience.toLocaleString('ko-KR')
                 let poster_url = movies[i]['poster_url']
+                let poster_info = movies[i]['poster_info']
                 let likes = movies[i]['likes']
 
                 let cardContentHtml = `
-                    <img src="${poster_url}" class="movie-poster" />
-                    <div class="movie-info">
-                        <span class="movie-title">${title}</span>
+                    <div class="card-content">
+                        <img src="${poster_url}" class="movie-poster" />
                         <div>
-                            <span class="icon"><i class="fas fa-thumbs-up"></i></span><span class="movie-likes">${likes}</span>
-                        </div>
-                        <div>
-                            누적관객수 <span class="movie-viewers">${audience}</span>
-                        </div>
-                        <div>
-                            개봉일 <span class="movie-date">${open_year}.${open_month}.${open_day}</span>
+                            <a class="movie-title" target="_blank" href="${poster_info}">${title}</a>
+                            <div>
+                                <span class="icon"><i class="fas fa-thumbs-up"></i></span><span class="movie-likes">${likes}</span>
+                            </div>
+                            <div>
+                                누적관객수 <span class="movie-viewers">${audience} 명</span>
+                            </div>
+                            <div>
+                                개봉일 <span class="movie-date">${open_year}.${open_month}.${open_day}</span>
+                            </div>
                         </div>
                     </div>
                 `
@@ -147,22 +243,24 @@
                 if (trashMode == false) {
                     cardFooterHtml = `
                         <div class="card-footer">
-                            <button type="button" class="btn btn-outline-primary" onclick="likeMovie('${id}')">
-                            좋아요
+                            <button type="button" class="movie-button1" onclick="likeMovie('${id}')">
+                                위로! <i class="fas fa-thumbs-up"></i>
                             </button>
-                            <button type="button" class="btn btn-outline-primary" onclick="toTrash('${id}')">
-                            휴지통으로
+                            <div style="border: 0.8px groove; height: 50px;"></div>
+                            <button type="button" class="movie-button2" onclick="trashMovie('${id}')">
+                                휴지통으로 <i class="fa-solid fa-trash"></i>
                             </button>
                         </div>
                     `
                 } else {
                     cardFooterHtml = `
                         <div class="card-footer">
-                            <button type="button" class="btn btn-outline-primary" onclick="restoreMovie('${id}')">
-                            복구하기
+                            <button type="button" class="movie-button3" onclick="restoreMovie('${id}')">
+                                복구하기 <i class="fa-solid fa-trash-can-arrow-up"></i>
                             </button>
-                            <button type="button" class="btn btn-outline-primary" onclick="deleteMovie('${id}')">
-                            영구삭제
+                            <div style="border: 0.8px groove; height: 50px;"></div>
+                            <button type="button" class="movie-button4" onclick="deleteMovie('${id}')">
+                                영구삭제 <i class="fa-solid fa-ban"></i>
                             </button>
                         </div>
                     `
@@ -177,31 +275,43 @@
             }
         }
 
+        function displayTrashMode(trashMode) {
+            if (trashMode == false) {
+                showTrashedMovies()
+            } else {
+                exitTrashMode()
+            }
+        }
+
         function showTrashedMovies() {
             trashMode = true
+
+            $('#trash-mode-box').empty()
+            $('#trash-mode-box').append(`
+                <a class="trash-button" onclick="exitTrashMode()">
+                    <i class="fa-solid fa-trash-can-arrow-up"></i> 휴지통 나가기
+                </a>
+            `)
+
             showMovies()
             displaySorter()
-            $('#show-trashed-movies').text('🗑️ 휴지통 나가기')
-            $('#show-trashed-movies').attr('onclick', 'exitTrashMode()')
         }
 
         function exitTrashMode() {
             trashMode = false
 
-            $('#show-trashed-movies').text('🗑️ 휴지통 보기')
-            $('#show-trashed-movies').attr('onclick', 'showTrashedMovies()')
+            $('#trash-mode-box').empty()
+            $('#trash-mode-box').append(`
+                <a class="trash-button" onclick="showTrashedMovies()">
+                    <i class="fa-solid fa-trash"></i> 휴지통 보기
+                </a>
+            `)
 
             showMovies()
             displaySorter()
         }
 
         function restoreMovie(id) {
-            restoreFromTrash(id)
-            showMovies()
-            displaySorter()
-        }
-
-        function restoreFromTrash(id) {
             $.ajax({
                 type: 'POST',
                 url: '/movie/trash/restore',
@@ -209,6 +319,7 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert(response['msg'])
+                        showMovies()
                     } else {
                         alert('복구에 실패했습니다!')
                     }
@@ -217,12 +328,6 @@
         }
 
         function deleteMovie(id) {
-            deleteFromTrash(id)
-            showMovies()
-            displaySorter()
-        }
-
-        function deleteFromTrash(id) {
             $.ajax({
                 type: 'DELETE',
                 url: '/movie/trash',
@@ -230,6 +335,7 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert(response['msg'])
+                        showMovies()
                     } else {
                         alert('영구 삭제에 실패했습니다!')
                     }
@@ -237,7 +343,7 @@
             })
         }
 
-        function toTrash(id) {
+        function trashMovie(id) {
             $.ajax({
                 type: 'POST',
                 url: '/movie/trash',
@@ -245,7 +351,7 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert(response['msg'])
-                        window.location.reload()
+                        showMovies()
                     } else {
                         alert('휴지통으로 버리기 실패!')
                     }
@@ -261,7 +367,7 @@
                 success: function (response) {
                     if (response['result'] == 'success') {
                         alert(response['msg'])
-                        window.location.reload()
+                        showMovies()
                     } else {
                         alert('좋아요 실패ㅠㅠ')
                     }
@@ -294,6 +400,15 @@
                 document.getElementById('sorter-date').classList.add('active')
             }
         }
+
+        function clickEffect(e) {
+            var d = document.createElement("div");
+            d.className = "clickEffect";
+            d.style.top = e.clientY + "px"; d.style.left = e.clientX + "px";
+            document.body.appendChild(d);
+            d.addEventListener('animationend', function () { d.parentElement.removeChild(d); }.bind(this));
+        }
+        document.addEventListener('click', clickEffect);
     </script>
 </head>
 
@@ -322,7 +437,6 @@
     <div class="mx-auto sorter-box">
         <span class="d-flex justify-content-end">
             <div id="trash-mode-box">
-                <a id="show-trashed-movies" onclick="showTrashedMovies()">🗑️ 휴지통 보기</a>
             </div>
         </span>
     </div>
