@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 
 from pymongo import MongoClient
 
-client = MongoClient('localhost', 27017)
-db = client.jungle
+client = MongoClient('mongodb://test:test@localhost', 27017)
+db = client.dbjungle
 
 
 def insert_all():
