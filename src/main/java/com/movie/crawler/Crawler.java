@@ -54,7 +54,9 @@ public class Crawler {
             double random = Math.random();
             int likes = (int) (random * 100);
 
-            Movie movie = new Movie(title, openYear, openMonth, openDay, audience, posterUrl, posterInfo, likes);
+            boolean trashed = false;
+
+            Movie movie = new Movie(title, openYear, openMonth, openDay, audience, posterUrl, posterInfo, likes, trashed);
             movieRepository.insert(movie);
             movies.add(movie);
         }
