@@ -31,4 +31,16 @@ public class Movie {
         this.likes = likes;
         this.trashed = trashed;
     }
+
+    public void likeMovie() {
+        likes++;
+    }
+
+    public void toTrash() {
+        trashed = true;
+    }
+
+    public void restoreFromTrash() {
+        trashed = false;
+    }
 }
