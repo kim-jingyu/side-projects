@@ -18,8 +18,9 @@ public class Movie {
     private String posterUrl;
     private String posterInfo;
     private int likes;
+    private boolean trashed;
 
-    public Movie(String title, int openYear, int openMonth, int openDay, int audience, String posterUrl, String posterInfo, int likes) {
+    public Movie(String title, int openYear, int openMonth, int openDay, int audience, String posterUrl, String posterInfo, int likes, boolean trashed) {
         this.title = title;
         this.openYear = openYear;
         this.openMonth = openMonth;
@@ -28,5 +29,6 @@ public class Movie {
         this.posterUrl = posterUrl;
         this.posterInfo = posterInfo;
         this.likes = likes;
+        this.trashed = trashed;
     }
 }
