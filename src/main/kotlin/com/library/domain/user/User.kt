@@ -1,5 +1,6 @@
 package com.library.domain.user
 
+import com.library.domain.book.Book
 import com.library.domain.user.loanhistory.UserLoanHistory
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Entity
@@ -20,5 +21,23 @@ class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 ) {
-    
+    init {
+        if (name.isBlank()) {
+            throw IllegalArgumentException("이름은 비어있을 수 없습니다.")
+        }
+    }
+
+    fun updateName(name: String) {
+        this.name = name
+    }
+
+    fun loanBook(book: Book) {
+        this.userLoanHistories.add(UserLoanHistory(this, book.name, false))
+    }
+
+    fun returnBook(bookName: String) {
+        this.userLoanHistories.first {
+            history -> history.bookName == bookName
+        }.doReturn()
+    }
 }
