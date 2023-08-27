@@ -1,6 +1,5 @@
 package com.library.dto.book
 
-class BookRequest(
+data class BookRequest(
     var name: String,
-) {
-}
+)

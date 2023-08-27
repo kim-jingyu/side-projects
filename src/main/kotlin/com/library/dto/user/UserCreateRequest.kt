@@ -1,7 +1,6 @@
 package com.library.dto.user
 
-class UserCreateRequest(
+data class UserCreateRequest(
     var name: String,
-    var age: Int,
-) {
-}
+    var age: Int?,
+)

@@ -1,7 +1,6 @@
 package com.library.dto.user
 
-class UserUpdateRequest(
+data class UserUpdateRequest(
     var id: Long,
     var name: String,
-) {
-}
+)
