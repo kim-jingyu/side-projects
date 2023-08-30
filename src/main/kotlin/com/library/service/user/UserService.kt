@@ -40,7 +40,7 @@ class UserService(
     }
 
     fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
-        return userRepository.findAll().map {
+        return userRepository.findAllWithHistories().map {
             user -> UserLoanHistoryResponse(
                 name = user.name,
                 books = user.userLoanHistories.map {
