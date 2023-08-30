@@ -8,6 +8,7 @@ import com.library.domain.user.loanhistory.UserLoanStatus
 import com.library.dto.book.BookLoanRequest
 import com.library.dto.book.BookRequest
 import com.library.dto.book.BookReturnRequest
+import com.library.dto.book.BookStatResponse
 import com.library.util.fail
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -40,5 +41,25 @@ class BookService(
     fun returnBook(request: BookReturnRequest) {
         val user = userRepository.findByName(request.userName) ?: fail()
         user.returnBook(request.bookName)
+    }
+
+    fun countLoanedBook(): Int {
+        return userLoanHistoryRepository.countByStatus(UserLoanStatus.LOANED).toInt()
+    }
+
+    fun getBookStatistics(): List<BookStatResponse> {
+//        val results = mutableListOf<BookStatResponse>()
+//        val books = bookRepository.findAll()
+//        for (book in books) {
+//            results.firstOrNull { dto -> book.type == dto.type }?.plusOne() ?: results.add(BookStatResponse(book.type, 1))
+//        }
+//        return results
+
+        // groupBy 함수형 프로그래밍 이용해서 리팩토링
+//        return bookRepository.findAll() // List<Book>
+//            .groupBy { book -> book.type }  // Map<BookType, List<Book>>
+//            .map { (type, books) -> BookStatResponse(type, books.size) }    // List<BookStatResponse>
+
+        return bookRepository.getStatistics()
     }
 }
