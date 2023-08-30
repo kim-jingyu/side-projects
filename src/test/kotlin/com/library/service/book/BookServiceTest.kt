@@ -131,7 +131,7 @@ class BookServiceTest @Autowired constructor(
     }
 
     @Test
-    @DisplayName("")
+    @DisplayName("분야별 책 권수를 정상 확인한다.")
     fun getBookStaticsTest() {
         // given
         bookRepository.saveAll(

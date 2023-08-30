@@ -9,6 +9,7 @@ import com.library.dto.book.BookLoanRequest
 import com.library.dto.book.BookRequest
 import com.library.dto.book.BookReturnRequest
 import com.library.dto.book.BookStatResponse
+import com.library.repository.book.BookQuerydslRepository
 import com.library.util.fail
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,6 +20,7 @@ class BookService(
     private val bookRepository: BookRepository,
     private val userRepository: UserRepository,
     private val userLoanHistoryRepository: UserLoanHistoryRepository,
+    private val bookQuerydslRepository: BookQuerydslRepository,
 ) {
     @Transactional
     fun saveBook(request: BookRequest) {
@@ -60,6 +62,6 @@ class BookService(
 //            .groupBy { book -> book.type }  // Map<BookType, List<Book>>
 //            .map { (type, books) -> BookStatResponse(type, books.size) }    // List<BookStatResponse>
 
-        return bookRepository.getStatistics()
+        return bookQuerydslRepository.getStatistics()
     }
 }
