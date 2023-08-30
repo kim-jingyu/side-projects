@@ -3,9 +3,8 @@ package com.library.service.user
 import com.library.domain.user.User
 import com.library.domain.user.UserRepository
 import com.library.domain.user.UserStatus
-import com.library.dto.user.UserCreateRequest
-import com.library.dto.user.UserResponse
-import com.library.dto.user.UserUpdateRequest
+import com.library.domain.user.loanhistory.UserLoanStatus
+import com.library.dto.user.*
 import com.library.util.fail
 import com.library.util.findByIdOrThrow
 import org.springframework.stereotype.Service
@@ -38,5 +37,19 @@ class UserService(
     fun deleteUser(name: String) {
         val user = userRepository.findByName(name) ?: fail()
         userRepository.delete(user)
+    }
+
+    fun getUserLoanHistories(): List<UserLoanHistoryResponse> {
+        return userRepository.findAll().map {
+            user -> UserLoanHistoryResponse(
+                name = user.name,
+                books = user.userLoanHistories.map {
+                    history -> BookHistoryResponse(
+                        name = history.bookName,
+                        isReturn = history.status == UserLoanStatus.RETURNED,
+                    )
+                }
+            )
+        }
     }
 }

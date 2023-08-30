@@ -1,6 +1,7 @@
 package com.library.controller.user
 
 import com.library.dto.user.UserCreateRequest
+import com.library.dto.user.UserLoanHistoryResponse
 import com.library.dto.user.UserResponse
 import com.library.dto.user.UserUpdateRequest
 import com.library.service.user.UserService
@@ -32,5 +33,10 @@ class UserController(
     @DeleteMapping("/user")
     fun deleteUser(@RequestParam name: String) {
         userService.deleteUser(name)
+    }
+
+    @GetMapping("/user/loan")
+    fun getUserLoanHistories() : List<UserLoanHistoryResponse> {
+        return userService.getUserLoanHistories();
     }
 }
