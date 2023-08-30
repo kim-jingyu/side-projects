@@ -2,19 +2,16 @@ package com.library.domain.user
 
 import com.library.domain.book.Book
 import com.library.domain.user.loanhistory.UserLoanHistory
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.OneToMany
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")
 class User(
     var name: String,
     val age: Int?,
+
+    @Enumerated(EnumType.STRING)
+    val userStatus: UserStatus,
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userLoanHistories: MutableList<UserLoanHistory> = mutableListOf(),
@@ -34,12 +31,26 @@ class User(
     }
 
     fun loanBook(book: Book) {
-        this.userLoanHistories.add(UserLoanHistory(this, book.name, false))
+        this.userLoanHistories.add(UserLoanHistory(this, book.name))
     }
 
     fun returnBook(bookName: String) {
         this.userLoanHistories.first {
             history -> history.bookName == bookName
         }.doReturn()
+    }
+
+    companion object{
+        fun fixture(
+            name: String = "유저1",
+            age: Int? = 12,
+            userStatus: UserStatus = UserStatus.ACTIVE,
+        ): User {
+            return User(
+                name = name,
+                age = age,
+                userStatus = userStatus,
+            )
+        }
     }
 }

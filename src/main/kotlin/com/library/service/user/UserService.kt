@@ -2,6 +2,7 @@ package com.library.service.user
 
 import com.library.domain.user.User
 import com.library.domain.user.UserRepository
+import com.library.domain.user.UserStatus
 import com.library.dto.user.UserCreateRequest
 import com.library.dto.user.UserResponse
 import com.library.dto.user.UserUpdateRequest
@@ -18,7 +19,7 @@ class UserService(
 
     @Transactional
     fun saveUser(request: UserCreateRequest) {
-        val newUser = User(request.name, request.age)
+        val newUser = User(request.name, request.age, UserStatus.ACTIVE)
         userRepository.save(newUser)
     }
 
