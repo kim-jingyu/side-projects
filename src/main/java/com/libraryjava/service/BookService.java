@@ -1,8 +1,9 @@
 package com.libraryjava.service;
 
-import com.libraryjava.domain.Book;
+import com.libraryjava.domain.book.Book;
 import com.libraryjava.domain.user.User;
 import com.libraryjava.domain.user.UserStatus;
+import com.libraryjava.domain.user.loanhistory.UserLoanStatus;
 import com.libraryjava.dto.book.BookLoanDto;
 import com.libraryjava.dto.book.BookMakeDto;
 import com.libraryjava.dto.book.BookReturnDto;
@@ -26,7 +27,7 @@ public class BookService {
     }
 
     public void loanBook(BookLoanDto loanDto) {
-        if (userLoanHistoryRepository.findByBookNameAndUserStatus(loanDto.bookName(), UserStatus.ACTIVE).isPresent()) {
+        if (userLoanHistoryRepository.findByBookNameAndUserLoanStatus(loanDto.bookName(), UserLoanStatus.LOANED).isPresent()) {
             throw new IllegalArgumentException("진작 대출되어 있는 책입니다.");
         }
 

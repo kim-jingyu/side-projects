@@ -1,4 +1,4 @@
-package com.libraryjava.domain;
+package com.libraryjava.domain.user.loanhistory;
 
 import com.libraryjava.domain.user.User;
 import com.libraryjava.domain.user.UserStatus;
@@ -16,18 +16,18 @@ public class UserLoanHistory {
     private String bookName;
 
     @Enumerated(EnumType.STRING)
-    private UserStatus userStatus;
+    private UserLoanStatus userLoanStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    public UserLoanHistory(String bookName, UserStatus userStatus, User user) {
+    public UserLoanHistory(String bookName, UserLoanStatus userLoanStatus, User user) {
         this.bookName = bookName;
-        this.userStatus = userStatus;
+        this.userLoanStatus = userLoanStatus;
         this.user = user;
     }
 
     public void doReturn() {
-        this.userStatus = UserStatus.IN_ACTIVE;
+        this.userLoanStatus = UserLoanStatus.RETURNED;
     }
 }

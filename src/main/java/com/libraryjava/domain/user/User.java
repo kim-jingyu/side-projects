@@ -1,6 +1,7 @@
 package com.libraryjava.domain.user;
 
-import com.libraryjava.domain.UserLoanHistory;
+import com.libraryjava.domain.user.loanhistory.UserLoanHistory;
+import com.libraryjava.domain.user.loanhistory.UserLoanStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,8 +19,12 @@ public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
     private int age;
+
+    @Enumerated(EnumType.STRING)
+    private UserStatus userStatus;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<UserLoanHistory> loanHistories = new ArrayList<>();
@@ -38,7 +43,7 @@ public class User {
     }
 
     public void loanBook(String bookName) {
-        loanHistories.add(new UserLoanHistory(bookName, UserStatus.ACTIVE, this));
+        loanHistories.add(new UserLoanHistory(bookName, UserLoanStatus.LOANED, this));
     }
 
     public void returnBook(String bookName) {

@@ -1,6 +1,6 @@
 package com.libraryjava.repository;
 
-import com.libraryjava.domain.Book;
+import com.libraryjava.domain.book.Book;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

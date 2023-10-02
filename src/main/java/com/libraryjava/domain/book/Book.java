@@ -1,9 +1,6 @@
-package com.libraryjava.domain;
+package com.libraryjava.domain.book;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -14,15 +11,18 @@ public class Book {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
-    private String type;
 
-    public Book(String name, String type) {
+    @Enumerated(EnumType.STRING)
+    private BookType type;
+
+    public Book(String name, BookType type) {
         this.name = name;
         this.type = type;
     }
 
-    public static Book fixture(String name, String type) {
+    public static Book fixture(String name, BookType type) {
         return new Book(name, type);
     }
 }
