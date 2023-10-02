@@ -2,6 +2,7 @@ package com.libraryjava.controller;
 
 import com.libraryjava.domain.user.User;
 import com.libraryjava.dto.user.UserMakeDto;
+import com.libraryjava.dto.user.UserResponseDto;
 import com.libraryjava.dto.user.UserUpdateDto;
 import com.libraryjava.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/user")
-    public ResponseEntity<List<User>> getUsers() {
+    public ResponseEntity<List<UserResponseDto>> getUsers() {
         return ResponseEntity
                 .ok()
                 .body(userService.getUsers());
@@ -45,7 +46,7 @@ public class UserController {
     }
 
     @DeleteMapping("/user")
-    public ResponseEntity<Void> deleteUser(@RequestBody String name) {
+    public ResponseEntity<Void> deleteUser(@RequestParam String name) {
         try {
             userService.deleteUser(name);
             return ResponseEntity

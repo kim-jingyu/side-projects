@@ -2,8 +2,5 @@ package com.libraryjava.dto.book;
 
 import lombok.Data;
 
-@Data
-public class BookReturnDto {
-    private String userName;
-    private String bookName;
+public record BookReturnDto(String userName, String bookName) {
 }

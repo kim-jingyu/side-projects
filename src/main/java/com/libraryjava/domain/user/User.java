@@ -4,6 +4,7 @@ import com.libraryjava.domain.UserLoanHistory;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,7 @@ import java.util.List;
 @Table(name = "users")
 @NoArgsConstructor
 @Getter
+@ToString(of = {"name", "age"})
 public class User {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -19,6 +21,7 @@ public class User {
     private String name;
     private int age;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<UserLoanHistory> loanHistories = new ArrayList<>();
 
     public User(String name, int age) {
@@ -26,18 +29,22 @@ public class User {
         this.age = age;
     }
 
+    public static User fixture(String name, int age) {
+        return new User(name, age);
+    }
+
     public void updateName(String name) {
         this.name = name;
     }
 
     public void loanBook(String bookName) {
-        loanHistories.add(new UserLoanHistory(bookName));
+        loanHistories.add(new UserLoanHistory(bookName, UserStatus.ACTIVE, this));
     }
 
     public void returnBook(String bookName) {
         for (UserLoanHistory loanHistory : loanHistories) {
             if (loanHistory.getBookName().equals(bookName)) {
-                loanHistory.returnBook();
+                loanHistory.doReturn();
             }
         }
     }

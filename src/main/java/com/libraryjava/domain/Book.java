@@ -15,8 +15,14 @@ public class Book {
     private Long id;
 
     private String name;
+    private String type;
 
-    public Book(String name) {
+    public Book(String name, String type) {
         this.name = name;
+        this.type = type;
+    }
+
+    public static Book fixture(String name, String type) {
+        return new Book(name, type);
     }
 }

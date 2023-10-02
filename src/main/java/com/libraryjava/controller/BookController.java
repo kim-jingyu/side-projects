@@ -1,6 +1,7 @@
 package com.libraryjava.controller;
 
 import com.libraryjava.dto.book.BookLoanDto;
+import com.libraryjava.dto.book.BookMakeDto;
 import com.libraryjava.dto.book.BookReturnDto;
 import com.libraryjava.service.BookService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,8 @@ public class BookController {
     private final BookService bookService;
 
     @PostMapping("/book")
-    public ResponseEntity<Void> makeBook(@RequestBody String name) {
-        bookService.makeBook(name);
+    public ResponseEntity<Void> makeBook(@RequestBody BookMakeDto bookMakeDto) {
+        bookService.makeBook(bookMakeDto);
         return ResponseEntity
                 .ok().build();
     }

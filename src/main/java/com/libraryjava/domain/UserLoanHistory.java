@@ -18,14 +18,16 @@ public class UserLoanHistory {
     @Enumerated(EnumType.STRING)
     private UserStatus userStatus;
 
-    @OneToMany(mappedBy = "loanHistories")
+    @ManyToOne(fetch = FetchType.LAZY)
     private User user;
 
-    public UserLoanHistory(String bookName) {
+    public UserLoanHistory(String bookName, UserStatus userStatus, User user) {
         this.bookName = bookName;
+        this.userStatus = userStatus;
+        this.user = user;
     }
 
-    public void returnBook() {
+    public void doReturn() {
         this.userStatus = UserStatus.IN_ACTIVE;
     }
 }
