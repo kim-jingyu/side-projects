@@ -1,11 +1,16 @@
 package com.libraryjava.service;
 
 import com.libraryjava.domain.user.User;
+import com.libraryjava.domain.user.loanhistory.UserLoanHistory;
+import com.libraryjava.domain.user.loanhistory.UserLoanStatus;
 import com.libraryjava.dto.user.UserMakeDto;
 import com.libraryjava.dto.user.UserResponseDto;
 import com.libraryjava.dto.user.UserUpdateDto;
+import com.libraryjava.dto.user.response.UserLoanHistoryResponse;
+import com.libraryjava.repository.UserLoanHistoryRepository;
 import com.libraryjava.repository.UserRepository;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,9 +25,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserServiceTest {
     @Autowired UserService userService;
     @Autowired UserRepository userRepository;
+    @Autowired
+    private UserLoanHistoryRepository userLoanHistoryRepository;
 
     @AfterEach
     void clean() {
+        System.out.println("userServiceTest CLEAN");
         userRepository.deleteAll();
     }
 
@@ -79,5 +87,42 @@ class UserServiceTest {
 
         // then
         assertThat(userRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("대출 기록이 없는 유저도 응답에 포함된다.")
+    void getUserLoanHistoriesTest1() {
+        // given
+        userRepository.save(User.fixture("A", 10));
+
+        // when
+        List<UserLoanHistoryResponse> result = userService.getUserLoanHistories();
+
+        // then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).name()).isEqualTo("A");
+        assertThat(result.get(0).books()).isEmpty();
+    }
+
+    @Test
+    @DisplayName("대출 기록이 많은 유저의 응답이 정상 동작한다.")
+    void getUserLoanHistoriesTest2() {
+        // given
+        User savedUser = userRepository.save(User.fixture("A", 10));
+        userLoanHistoryRepository.saveAll(List.of(
+                new UserLoanHistory("책1", UserLoanStatus.LOANED, savedUser),
+                new UserLoanHistory("책2", UserLoanStatus.LOANED, savedUser),
+                new UserLoanHistory("책3", UserLoanStatus.RETURNED, savedUser)
+        ));
+
+        // when
+        List<UserLoanHistoryResponse> result = userService.getUserLoanHistories();
+
+        // then
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).name()).isEqualTo("A");
+        assertThat(result.get(0).books()).hasSize(3);
+        assertThat(result.get(0).books()).extracting("name").containsExactlyInAnyOrder("책1", "책2", "책3");
+        assertThat(result.get(0).books()).extracting("isReturn").containsExactlyInAnyOrder(false, false, true);
     }
 }

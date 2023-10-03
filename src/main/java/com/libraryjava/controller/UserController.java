@@ -1,6 +1,6 @@
 package com.libraryjava.controller;
 
-import com.libraryjava.domain.user.User;
+import com.libraryjava.dto.user.response.UserLoanHistoryResponse;
 import com.libraryjava.dto.user.UserMakeDto;
 import com.libraryjava.dto.user.UserResponseDto;
 import com.libraryjava.dto.user.UserUpdateDto;
@@ -56,5 +56,11 @@ public class UserController {
                     .badRequest()
                     .build();
         }
+    }
+
+    @GetMapping("/user/loan")
+    public ResponseEntity<List<UserLoanHistoryResponse>> getUserLoan() {
+        return ResponseEntity
+                .ok(userService.getUserLoanHistories());
     }
 }
