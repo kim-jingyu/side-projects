@@ -3,13 +3,13 @@ package com.libraryjava.controller;
 import com.libraryjava.dto.book.BookLoanDto;
 import com.libraryjava.dto.book.BookMakeDto;
 import com.libraryjava.dto.book.BookReturnDto;
+import com.libraryjava.dto.book.response.BookStatResponse;
 import com.libraryjava.service.BookService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,5 +40,17 @@ public class BookController {
         bookService.returnBook(bookReturnDto);
         return ResponseEntity
                 .ok().build();
+    }
+
+    @GetMapping("/book/loan")
+    public ResponseEntity<Integer> getCountLoanedBook() {
+        return ResponseEntity
+                .ok(bookService.countLoanedBook());
+    }
+
+    @GetMapping("/book/stat")
+    public ResponseEntity<List<BookStatResponse>> getBookStatistics() {
+        return ResponseEntity
+                .ok(bookService.getBookStatistics());
     }
 }

@@ -9,6 +9,7 @@ import com.libraryjava.domain.user.loanhistory.UserLoanStatus;
 import com.libraryjava.dto.book.BookLoanDto;
 import com.libraryjava.dto.book.BookMakeDto;
 import com.libraryjava.dto.book.BookReturnDto;
+import com.libraryjava.dto.book.response.BookStatResponse;
 import com.libraryjava.repository.BookRepository;
 import com.libraryjava.repository.UserLoanHistoryRepository;
 import com.libraryjava.repository.UserRepository;
@@ -108,5 +109,50 @@ class BookServiceTest {
         List<UserLoanHistory> results = userLoanHistoryRepository.findAll();
         assertThat(results).hasSize(1);
         assertThat(results.get(0).getUserLoanStatus()).isEqualTo(UserLoanStatus.RETURNED);
+    }
+
+    @Test
+    @DisplayName("책 대여 권수를 확인한다.")
+    void countLoanedBookTest() {
+        // given
+        User savedUser = userRepository.save(User.fixture("김진규", 10));
+        userLoanHistoryRepository.saveAll(List.of(
+                new UserLoanHistory("이상한 나라의 앨리스", UserLoanStatus.LOANED, savedUser),
+                new UserLoanHistory("토비의 스프링", UserLoanStatus.LOANED, savedUser),
+                new UserLoanHistory("해리포터", UserLoanStatus.LOANED, savedUser)));
+
+        // when
+        int count = bookService.countLoanedBook();
+
+        // then
+        assertThat(count).isEqualTo(3);
+    }
+
+    @Test
+    @DisplayName("분야별 책 권수를 확인한다.")
+    void getBookStatisticsTest() {
+        // given
+        bookRepository.saveAll(List.of(
+                Book.fixture("이상한 나라의 앨리스", BookType.SOCIETY),
+                Book.fixture("토비의 스프링", BookType.COMPUTER),
+                Book.fixture("해리포터", BookType.SOCIETY),
+                Book.fixture("양자역학", BookType.SCIENCE)
+        ));
+
+        // when
+        List<BookStatResponse> result = bookService.getBookStatistics();
+
+        // then
+        assertThat(result).hasSize(3);
+        assertCount(result, BookType.COMPUTER, 1L);
+        assertCount(result, BookType.SCIENCE, 1L);
+        assertCount(result, BookType.SOCIETY, 2L);
+    }
+
+    private void assertCount(List<BookStatResponse> result, BookType type, long expectedCount) {
+        assertThat(result.stream()
+                .filter(dto -> dto.type() == type)
+                .findFirst().orElseThrow(IllegalStateException::new).count())
+                .isEqualTo(expectedCount);
     }
 }
