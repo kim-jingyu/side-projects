@@ -1,0 +1,97 @@
+h.container-3{
+  width: 300px;
+  vertical-align: middle;
+  white-space: nowrap;
+  position: relative;
+  top: 50%;
+}
+
+#s100{
+  width: 300px;
+  height: 400px;
+  white-space: nowrap;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-top: 150px;
+}
+#s101{
+  width: 300px;
+  height: 1px;
+  white-space: nowrap;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-left: -300px;
+}
+#s102{
+  width: 100px;
+  height: 78px;
+  white-space: nowrap;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  margin-left: -300px;
+}
+.container-3 input#search{
+  width: 300px;
+  height: 50px;
+  position: relative;
+  top: 50%;
+  background: #e2e2e2;
+  border: none;
+  font-size: 10pt;
+  float: left;
+  color: #000000;
+  padding-left: 45px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  color: #000000;
+
+}
+.container-3 input#search::-webkit-input-placeholder {
+   color: #000000;
+}
+ 
+.container-3 input#search:-moz-placeholder { /* Firefox 18- */
+   color: #000000;  
+}
+ 
+.container-3 input#search::-moz-placeholder {  /* Firefox 19+ */
+   color: #000000;  
+}
+ 
+.container-3 input#search:-ms-input-placeholder {  
+   color: #000000;  
+}
+.container-3 .icon{
+  position: absolute;
+  top: 50%;
+  margin-left: 12px;
+  margin-top: 12px;
+  z-index: 1;
+  color: #3872c9;
+ 
+   -webkit-transition: all .55s ease;
+  -moz-transition: all .55s ease;
+  -ms-transition: all .55s ease;
+  -o-transition: all .55s ease;
+  transition: all .55s ease;
+}
+.container-3 input#search:focus, .container-3 input#search:active{
+    outline:none; 
+}
+ 
+.container-3:hover .icon{
+  position: absolute;
+  top: 50%;
+  margin-left: 12px;
+  margin-top: 12px;
+  color: #93a2ad;
+  -webkit-transform:scale(1.5); /* Safari and Chrome */
+  -moz-transform:scale(1.5); /* Firefox */
+  -ms-transform:scale(1.5); /* IE 9 */
+  -o-transform:scale(1.5); /* Opera */
+   transform:scale(1.5);
+  }
