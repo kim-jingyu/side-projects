@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>나홀로 메모장</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Gaegu:wght@300&family=Stylish&display=swap"
+        rel="stylesheet">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+        integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns"
+        crossorigin="anonymous"></script>
+
+
+    <style>
+        * {
+            font-family: 'Bagel Fat One', cursive;
+            font-family: 'Gaegu', cursive;
+            font-family: 'Stylish', sans-serif;
+        }
+
+        .wrap {
+            width: 900px;
+            margin: 0px auto 30px auto;
+        }
+
+        .article-box {
+            margin: 0px auto 30px auto;
+            width: 500px;
+            border: 2px solid;
+            border-radius: 5px;
+            padding: 30px;
+        }
+
+        #arti-box {
+            display: none;
+        }
+
+        .comment {
+            color: blue;
+            font-weight: bold;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            $('#cards-box').html('')
+            showArticles()
+        })
+
+        function controlArticleBox() {
+            let status = $('#arti-box').css('display')
+            if (status == 'none') {
+                $('#posting-btn').text('포스팅 박스 닫기')
+                $('#arti-box').show()
+            } else {
+                $('#posting-btn').text('포스팅 박스 열기')
+                $('#arti-box').hide()
+            }
+        }
+
+        function saveArticle() {
+            let url = $('#article-url').val()
+            let comment = $('#simple-comment').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/memo",
+                data: { url_give: url, comment_give: comment },
+                success: function (response) {
+                    console.log(response['result'])
+                    if (response['result'] == 'success') {
+                        alert('포스팅 성공!', response['msg'])
+                        window.location.reload()
+                    } else {
+                        alert('서버 오류!')
+                    }
+                }
+            })
+        }
+
+        function showArticles() {
+            $.ajax({
+                type: "GET",
+                url: "/memo",
+                data: {},
+                success: function (response) {
+                    let articles = response['articles']
+                    if (response['result'] == 'success') {
+                        alert(response['msg'])
+                    }
+
+                    for (let i = 0; i < articles.length; i++) {
+                        makeCard(articles[i]['url'], articles[i]['title'], articles[i]['image'], articles[i]['description'], articles[i]['comment'])
+                    }
+                }
+            })
+
+        }
+
+        function makeCard(url, title, image, description, comment) {
+            let html = `
+                <div class="card">
+                    <img src="${image}" class="card-img-top" alt="Card image cap">
+                    <div class="card-body">
+                        <a href="${url}" class="card-title">${title}</a>
+                        <p class="card-text">${description}</p>
+                        <p class="card-text comment">${comment}</p>
+                    </div>
+                </div>
+            `
+            $('#cards-box').append(html)
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="jumbotron">
+            <h1 class="display-4">나홀로 링크 메모장!</h1>
+            <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다</p>
+            <hr class="my-4">
+            <button type="button" class="btn btn-primary btn-lg" id="posting-btn" onclick="controlArticleBox()">포스팅 박스
+                열기</button>
+        </div>
+        <form class="article-box" id="arti-box">
+            <div class="form-group">
+                <label for="article-url">아티클 URL</label>
+                <input class="form-control" id="article-url" type="text">
+            </div>
+            <div class="form-group">
+                <label for="simple-comment">간단 코멘트</label>
+                <textarea class="form-control" id="simple-comment" row="2"></textarea>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="saveArticle()">기사저장</button>
+        </form>
+        <div class="card-columns" id="cards-box">
+        </div>
+</body>
+
+</html>

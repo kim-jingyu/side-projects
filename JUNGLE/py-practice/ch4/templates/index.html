@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"-->
+<!--        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"-->
+<!--        crossorigin="anonymous"></script>-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.0/jquery.min.js"></script>
+    <title>Document</title>
+    <script type="text/javascript">
+        function get_test(){
+            $.ajax({
+                type: "GET",
+                url: "/test?title_give=봄날은간다",
+                data: {},
+                success: function(response){
+                    console.log(response)
+                }
+            })
+        }
+
+        function post_test() {
+            $.ajax({
+                type: "POST",
+                url: "/test",
+                data: { title_give: '어벤져스' },
+                success: function(response) {
+                    console.log(response)
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <h1>server made by flask</h1>
+<!--    <img src="{{ url_for('static', filename='1.png') }}">-->
+    <button onclick="get_test()">GET TEST</button>
+    <button onclick="post_test()">POST TEST</button>
+</body>
+</html>
